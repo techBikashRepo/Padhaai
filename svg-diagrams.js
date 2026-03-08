@@ -843,7 +843,7 @@
      Part 11 — Distributed Systems
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p11t4"] = {
+  DIAGRAMS["p12t3"] = {
     title: "CAP Theorem",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -914,7 +914,7 @@
     },
   };
 
-  DIAGRAMS["p12t3"] = {
+  DIAGRAMS["p12t4"] = {
     title: "Design Twitter/X Feed Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -944,7 +944,7 @@
   ───────────────────────────────────────────────── */
 
   function genericDiagram(topic) {
-    const type = topic.id.slice(0, 2);
+    const type = (topic.id.match(/^p\d+/) || ["p1"])[0];
     const maps = {
       p1: "p1t1",
       p2: "p2t1",

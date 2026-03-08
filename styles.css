@@ -617,7 +617,6 @@ body {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-secondary);
-  truncate: true;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1540,7 +1539,7 @@ code {
     display: flex;
   }
   .content-area {
-    padding: 20px 18px;
+    padding: 0;
   }
   .info-grid {
     grid-template-columns: 1fr 1fr;
@@ -2572,5 +2571,21 @@ code {
   .platform-pill {
     font-size: 11px;
     padding: 4px 10px;
+  }
+  .parts-grid {
+    grid-template-columns: 1fr;
+  }
+  .welcome-screen,
+  .topic-content {
+    padding: 16px 14px 40px;
+  }
+  .welcome-parts {
+    padding: 16px 14px 40px;
+  }
+  .topic-header {
+    gap: 12px;
+  }
+  .topic-nav-bar {
+    padding: 12px 14px;
   }
 }
