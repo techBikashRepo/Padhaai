@@ -83,6 +83,13 @@
           <span>Welcome to Architect Academy</span>
         </div>
         <div class="topbar-actions">
+          <button
+            class="btn-icon btn-diagrams"
+            id="diagramsBtn"
+            title="Architecture Diagrams"
+          >
+            🗂️
+          </button>
           <button class="btn-icon" id="topThemeToggle" title="Toggle theme">
             🌙
           </button>
@@ -129,6 +136,9 @@
 
         <!-- Topic Content -->
         <div class="topic-content hidden" id="topicContent"></div>
+
+        <!-- Diagrams Screen -->
+        <div class="diagrams-screen hidden" id="diagramsScreen"></div>
       </div>
     </main>
 
@@ -147,6 +157,7 @@
     <script src="data/part12.js"></script>
     <!-- Assembler + App -->
     <script src="topics.js"></script>
+    <script src="diagrams.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

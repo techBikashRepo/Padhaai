@@ -79,6 +79,23 @@ const PART1 = {
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">What Interviewers Expect</div><div class="interview-q">When asked to design any system, always start by describing how the network carries data between components. Interviewers look for candidates who instinctively think about latency, bandwidth, and failure modes — not just happy-path data flow. Mention that networks are unreliable and explain how your design handles that.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Computer A
+   │
+   │ Data
+   ▼
+Computer B
+
+Example with multiple devices:
+Laptop ─── Router ─── Server
+   │
+Phone
+
+Meaning: Devices connected together to exchange data.</div>`,
+        },
       ],
     },
 
@@ -140,6 +157,33 @@ const PART1 = {
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Key Point</div><div class="interview-q">When discussing database placement or microservice topology in a system design interview, always mention latency tiers. A 1ms LAN call vs 100ms internet call repeated thousands of times per second is a 100x difference in system performance. Interviewers reward candidates who think about data locality.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">LAN (Office Network)
+
+Laptop ─┐
+        ├── Switch ─── Router
+Printer ┘
+
+WAN
+
+Office Router ───────── ISP Network ───────── Data Center
+
+Internet
+
+User Device
+     │
+     ▼
+ISP
+     │
+     ▼
+Global Internet Backbone
+     │
+     ▼
+Website Server</div>`,
+        },
       ],
     },
 
@@ -192,6 +236,22 @@ Load Balancer → Public IP: 13.234.56.78  ← only this is exposed
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Security Design</div><div class="interview-q">When designing any system, put databases and internal services in private subnets with private IPs only. Only expose public-facing components (load balancers, CDN origins) to the internet. This is the basic AWS VPC security model — interviewers expect you to describe public vs private subnet separation as part of any cloud-based system design.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Home Network
+
+Laptop (192.168.1.5)
+Phone  (192.168.1.8)
+TV     (192.168.1.12)
+        │
+        ▼
+Router (Public IP: 49.23.112.9)
+        │
+        ▼
+Internet</div>`,
+        },
       ],
     },
 
@@ -240,6 +300,18 @@ ShopKart VPC Design:
           color: "si-orange",
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Cloud Architecture</div><div class="interview-q">For senior roles, interviewers may ask you to explain VPC design. Know that a /16 VPC gives you 65,536 IPs and you carve it into smaller /24 subnets per tier. Each subnet lives in one Availability Zone. Multi-AZ requires multiple subnets. This is foundational AWS/GCP networking architecture.</div></div>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">IPv4 Address
+
+192.168.1.25
+
+[Network] [Host]
+
+192.168.1  | 25</div>`,
         },
       ],
     },
@@ -299,6 +371,24 @@ Security Group Rules (firewall):
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Security Design</div><div class="interview-q">Know default ports cold: 80 (HTTP), 443 (HTTPS), 22 (SSH), 3306 (MySQL), 5432 (Postgres), 6379 (Redis), 27017 (MongoDB). When designing systems, a key security principle is: no database port should ever be open to the public internet. Security group / firewall rules restrict which IP ranges can reach which ports.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Server (IP: 10.0.0.1)
+
+Port 80  → HTTP
+Port 443 → HTTPS
+Port 5432 → PostgreSQL
+
+Connection example:
+Client
+10.0.0.5:53000
+      │
+      ▼
+Server
+10.0.0.1:443</div>`,
+        },
       ],
     },
 
@@ -344,6 +434,24 @@ Security Group Rules (firewall):
           color: "si-yellow",
           title: "Architect Thinking",
           body: `<p>In cloud environments, you rarely think about physical switches and routers — AWS/GCP abstract them into VPCs, subnets, and route tables. But the mental model holds: anything in the same subnet communicates cheaply (switch-level). Traffic crossing subnets or going to the internet crosses a router boundary — potentially incurring latency, cost, and security scrutiny (security group rules). Every subnet boundary in your architecture diagram represents a routing decision.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Switch (inside LAN):
+Laptop ─┐
+        ├── Switch ─── Printer
+Server ─┘
+
+Router (connects networks):
+LAN Network
+     │
+     ▼
+Router
+     │
+     ▼
+Internet</div>`,
         },
       ],
     },
@@ -398,6 +506,20 @@ Packets take different routes but arrive at the same destination.</div>`,
           color: "si-yellow",
           title: "Architect Thinking",
           body: `<p>Packet size and network MTU (Maximum Transmission Unit) matter in high-throughput systems. "Jumbo frames" (9,000 byte MTU) on internal networks dramatically improve throughput for large data transfers between servers. On the internet you're stuck with 1,500 bytes MTU. This is why bulk data transfers between services (like replicating a database backup) are architected differently from low-latency API calls — batch size, connection pooling, and streaming strategies all come from understanding how packets flow.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Large Message
+     │
+     ▼
+Split into Packets
+
+[Packet1] [Packet2] [Packet3]
+      │
+      ▼
+Travel separately through network</div>`,
         },
       ],
     },
@@ -458,6 +580,21 @@ Packets take different routes but arrive at the same destination.</div>`,
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Multi-Region Design</div><div class="interview-q">When designing a globally distributed system, DNS is usually your first routing layer. Route 53 Latency Routing automatically sends Indian users to the Mumbai region and US users to the Virginia region, purely via DNS. This is a common point in system design discussions about global scale.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">User types:
+
+shopkart.com
+      │
+      ▼
+DNS Server
+      │
+      ▼
+Returns IP
+34.203.12.45</div>`,
+        },
       ],
     },
 
@@ -515,6 +652,30 @@ Browser → TCP connection to 13.234.56.78:443</div>`,
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">What to Mention</div><div class="interview-q">If asked "what happens when you type a URL in a browser", the complete answer covers: DNS resolution (this flow), TCP connection, TLS handshake, HTTP request, server processing, HTTP response, browser rendering. DNS is just step one, but interviewers want every step. Walk through the full DNS chain — it shows you understand distributed hierarchical systems.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Browser
+   │
+   ▼
+Local DNS Cache
+   │
+   ▼
+ISP DNS Resolver
+   │
+   ▼
+Root DNS
+   │
+   ▼
+TLD DNS (.com)
+   │
+   ▼
+Authoritative DNS
+   │
+   ▼
+IP Address returned</div>`,
+        },
       ],
     },
 
@@ -561,6 +722,22 @@ When payment-service pod restarts at new IP 10.0.2.55:
           title: "Architect Thinking",
           body: `<p>In microservices architecture, <strong>service discovery</strong> is the mechanism that keeps DNS records for internal services fresh as pods scale up/down and restart. Tools like Kubernetes CoreDNS, Consul, and AWS Service Discovery provide this. The fundamental principle is the same as internet DNS: give everything a name, resolve names dynamically. This decouples services from each other's physical locations — the cornerstone of resilient microservices communication.</p>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Human Friendly
+
+shopkart.com
+     │
+     ▼
+DNS
+     │
+     ▼
+Machine Address
+
+34.203.12.45</div>`,
+        },
       ],
     },
 
@@ -606,6 +783,24 @@ When payment-service pod restarts at new IP 10.0.2.55:
           color: "si-orange",
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Protocol Selection</div><div class="interview-q">Interviewers love asking about TCP vs UDP in real-time system design (live streaming, gaming, video calls). The answer: UDP for latency-sensitive streams where an occasional dropped packet is acceptable (video), TCP for transactional data where every byte matters (orders, payments, authentication). Mention HTTP/3/QUIC for bonus credit.</div></div>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">TCP
+
+Client ──► Server
+      ACK
+Client ◄── Server
+Reliable.
+
+UDP
+
+Client ───► Server
+Client ───► Server
+Client ───► Server
+Fast but unreliable.</div>`,
         },
       ],
     },
@@ -665,6 +860,16 @@ When payment-service pod restarts at new IP 10.0.2.55:
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Connection Optimization</div><div class="interview-q">Mention TCP connection pooling when discussing database performance. "Each TCP + TLS handshake costs 1–2 RTTs, so we maintain a pool of pre-established connections." This shows you understand the full cost of a connection, not just query execution time.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client → Server : SYN
+Server → Client : SYN-ACK
+Client → Server : ACK
+
+Connection established.</div>`,
+        },
       ],
     },
 
@@ -704,6 +909,19 @@ When payment-service pod restarts at new IP 10.0.2.55:
           color: "si-yellow",
           title: "Architect Thinking",
           body: `<p><strong>Head-of-line blocking</strong> is TCP's biggest weakness for multiplexed traffic. If segment 2 is dropped and segments 3, 4, 5 arrive, TCP buffers them ALL and delivers nothing until segment 2 is retransmitted. For HTTP/2 (which multiplexes streams over one TCP connection), one dropped packet stalls ALL streams. HTTP/3 solves this by using QUIC/UDP, where independent streams don't block each other on packet loss.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client → Packet 1
+Server → ACK
+
+Client → Packet 2
+Server → ACK
+
+Packet lost
+Client → Retransmit</div>`,
         },
       ],
     },
@@ -763,6 +981,23 @@ HTTP Response:
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">HTTP/2 vs HTTP/3</div><div class="interview-q">Know why HTTP/2 was better than HTTP/1.1 (multiplexing) and why HTTP/3 improves on HTTP/2 (no TCP head-of-line blocking). Interviewers appreciate candidates who understand protocol evolution — it shows you understand the "why" behind technology choices, not just how to use them.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client (Browser)
+     │
+     ▼
+HTTP Request
+GET /products
+     │
+     ▼
+Server
+     │
+     ▼
+HTTP Response
+200 OK</div>`,
+        },
       ],
     },
 
@@ -804,6 +1039,15 @@ HTTP Response:
           color: "si-yellow",
           title: "Architect Thinking — Idempotency",
           body: `<p>The idempotency of GET, PUT, and DELETE enables smarter infrastructure. Intermediaries (CDNs, caches, load balancers) know it is safe to cache GET responses, retry PUT/DELETE without side effects, and never retry POST automatically (could create duplicates). When designing APIs, choosing the right method enables the entire infrastructure stack to work intelligently with your data.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">GET     → Fetch data
+POST    → Create resource
+PUT     → Update resource
+DELETE  → Remove resource</div>`,
         },
       ],
     },
@@ -864,6 +1108,19 @@ HTTP Response:
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Production Readiness</div><div class="interview-q">When designing APIs in interviews, always specify your error status codes. Describe your monitoring strategy: "We alert on-call if 5xx rate exceeds 1%. We track 4xx rates separately to detect client bugs or API misuse. 429s tell us we need stricter rate limiting." This level of operational thinking distinguishes senior engineers.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">2xx → Success
+3xx → Redirect
+4xx → Client Error
+5xx → Server Error
+
+Example:
+404 Not Found
+500 Internal Server Error</div>`,
+        },
       ],
     },
 
@@ -906,6 +1163,19 @@ RESPONSE HEADERS (ShopKart → Rahul):
           color: "si-yellow",
           title: "Architect Thinking — Cache Headers",
           body: `<p>Getting <strong>Cache-Control</strong> headers right is one of the highest-leverage performance optimisations. <code>Cache-Control: public, max-age=300</code> tells CDNs and browsers to cache the response for 5 minutes — eliminating database and server load for popular product pages. ShopKart's product images use <code>max-age=31536000, immutable</code> (cache forever — image URLs change when content changes). Setting the wrong cache headers either wastes origin server capacity or gives users stale data. Understanding the full cache-control token vocabulary (no-cache, no-store, must-revalidate, stale-while-revalidate) is essential architecture knowledge.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Request
+
+GET /products
+
+Headers:
+Host: shopkart.com
+Authorization: Bearer token
+Content-Type: application/json</div>`,
         },
       ],
     },
@@ -962,6 +1232,21 @@ Missing any security flag = potential attack vector:
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Session Scaling</div><div class="interview-q">When discussing user authentication in system design, explicitly mention external session storage: "Sessions are stored in Redis, not server memory, so any server can handle any user's request. Redis is replicated across availability zones for resilience." This shows you understand stateless server architecture.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Browser
+   │
+   ▼
+Cookie: sessionId=abc123
+   │
+   ▼
+Server
+   │
+   ▼
+Session Store (Redis)</div>`,
+        },
       ],
     },
 
@@ -1002,6 +1287,19 @@ Missing any security flag = potential attack vector:
           color: "si-yellow",
           title: "Architect Thinking",
           body: `<p>In modern infrastructure, TLS termination typically happens at the load balancer or CDN edge, not at individual application servers. Traffic from the CDN edge to the internal load balancer, and from the load balancer to app servers, can use HTTP over the internal private network (no public exposure). Some high-security architectures use end-to-end TLS (mTLS — mutual TLS) even for internal service communication — each service has its own certificate and they mutually authenticate. AWS App Mesh and Istio service mesh implement this automatically.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">HTTP
+
+Browser → Server
+(Data Plain Text)
+
+HTTPS
+
+Browser → Encrypted → Server</div>`,
         },
       ],
     },
@@ -1053,6 +1351,16 @@ TLS 1.3: completes in 1 RTT (vs 2 RTT in TLS 1.2)
           color: "si-yellow",
           title: "Architect Thinking",
           body: `<p>TLS adds computational overhead for asymmetric cryptography (only during handshake) and symmetric encryption (every packet, but extremely fast on modern CPUs with hardware acceleration). The real cost is latency, not CPU. Solutions: <strong>session resumption</strong> (skip handshake for returning connections), <strong>CDN termination</strong> (terminate TLS close to the user to minimise handshake RTT), <strong>OCSP stapling</strong> (avoid extra round trip for certificate revocation check). These optimisations together can cut page load times by 200–400ms for first-time visitors.</p>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client → Hello
+Server → Certificate
+Client → Key Exchange
+
+Secure connection established</div>`,
         },
       ],
     },
@@ -1116,6 +1424,17 @@ WRONG: Access-Control-Allow-Origin: *  (wildcard) with credentials
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">CORS is a Browser Concern</div><div class="interview-q">CORS is enforced by the browser only. Postman, curl, and server-to-server calls are never affected by CORS. If you can call the API from Postman but not from your browser, it is a CORS configuration issue. This distinction trips up many juniors, and knowing it demonstrates real debugging experience.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Frontend (shopkart.com)
+        │
+        ▼
+API (api.shopkart.com)
+
+Server must allow origin</div>`,
+        },
       ],
     },
 
@@ -1170,6 +1489,24 @@ Total (cold, no cache): 200–600ms ← first visit, new connection</div>`,
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Performance Analysis</div><div class="interview-q">When asked to optimise a slow endpoint, walk through the entire lifecycle systematically. "First I'd check if the response is cacheable. Then profile the server-side processing — is it a slow DB query? Too many DB calls? Lack of indexes? Third, is the payload too large — should we paginate or compress? Finally, is the client too geographically far — should we add a CDN?" This systematic approach impresses interviewers.</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Browser
+   │
+   ▼
+DNS
+   │
+   ▼
+Load Balancer
+   │
+   ▼
+Application Server
+   │
+   ▼
+Database</div>`,
+        },
       ],
     },
 
@@ -1223,6 +1560,19 @@ Bandwidth:
           title: "Architect Thinking",
           body: `<p>The <strong>bandwidth-delay product</strong> = bandwidth × RTT. This represents how much data is "in flight" in the network at any time. A 100ms RTT connection at 1Gbps has 100MB in flight. TCP window sizes must accommodate this to fully utilise bandwidth. This is why long-distance high-bandwidth transfers (like database backups across regions) benefit from TCP tuning and parallel streams. For interactive APIs (Rahul's search), latency is the bottleneck — more bandwidth won't help. Get the service closer to the user (CDN edges) instead.</p>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Latency
+Request → Response time
+
+Bandwidth
+Pipe width
+
+Throughput
+Requests processed per second</div>`,
+        },
       ],
     },
 
@@ -1271,6 +1621,15 @@ Optimisations that eliminate RTTs:
   <li>Co-locate tightly coupled services in the same AZ to minimise RTT</li>
   <li>Consider gRPC multiplexing for high-frequency service-to-service calls</li>
 </ul>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client → Server
+Server → Client
+
+Total time = Round Trip Time</div>`,
         },
       ],
     },
@@ -1360,6 +1719,22 @@ NEVER CACHE (personalised/sensitive):
           color: "si-orange",
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Every System Needs a CDN</div><div class="interview-q">In virtually every system design interview, a CDN should appear in your architecture diagram for any user-facing system. Start with: "Static assets and product images are served via CloudFront with long TTLs. Dynamic API responses for popular queries are cached at the edge for 60 seconds. This reduces origin load by ~70% and cuts global users' latency from 150ms to 5ms." This kind of quantified reasoning wins interviews.</div></div>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">User
+ │
+ ▼
+CDN Edge Server (near user)
+ │
+ ▼
+Origin Server
+
+Example:
+India User → Mumbai CDN
+            → not US server</div>`,
         },
       ],
     },

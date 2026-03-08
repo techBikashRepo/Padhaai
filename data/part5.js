@@ -79,6 +79,28 @@ Phase 3 — 100M users, 200 engineers (microservices):
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">When to Use Each</div><div class="interview-q">Interviewers love this question. Answer: "I'd start with a well-structured monolith. Microservices make sense when: (1) specific parts need independent scaling (our search service needs 10x capacity of checkout), (2) different teams need to deploy independently without coordination, (3) different services benefit from different tech stacks. The cost is operational complexity — distributed tracing, separate CI/CD, service discovery, and distributed transactions. I'd only pay that cost when the benefits are clearly demonstrated."</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Users
+  │
+  ▼
+CDN
+  │
+  ▼
+Load Balancer
+  │
+  ▼
+Application Servers
+  │
+  ├── Product Service
+  ├── Order Service
+  └── Payment Service
+  │
+  ▼
+Database</div>`,
+        },
       ],
     },
 
@@ -162,6 +184,21 @@ REPOSITORY (orderRepository.js):
           title: "Architect Thinking — Why Layers Matter",
           body: `<p>The key benefit of layered architecture is <strong>testability and replaceability</strong>. To test orderService, you can mock the repository (no real database needed). Business logic tests run in milliseconds. If you switch from PostgreSQL to MongoDB, only the Repository layer changes — no business logic changes. If you switch from REST to GraphQL, only the Controller layer changes. Each layer is independently changeable because layers depend on abstractions (interfaces), not concrete implementations. This is the <strong>Dependency Inversion Principle</strong> in practice.</p>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Order Service
+      │
+      ▼
+Message Queue
+      │
+      ▼
+Email Worker
+      │
+      ▼
+Send Email</div>`,
+        },
       ],
     },
 
@@ -225,6 +262,21 @@ productRepository.js — Data Access:
           color: "si-orange",
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Code Organisation</div><div class="interview-q">When asked about code architecture: "We follow the Controller-Service-Repository pattern. Controllers handle HTTP parsing and validation. Services contain business logic and are tested with mock repositories — no DB required. Repositories handle all SQL. This separation means we can test 80% of our business logic without a database, and our test suite runs in under 30 seconds." Testing speed is the concrete benefit that impresses interviewers.</div></div>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">User Request
+     │
+     ▼
+Application Server
+     │
+     ▼
+Redis Cache
+     │
+     ▼
+Database</div>`,
         },
       ],
     },
@@ -389,6 +441,20 @@ Each BFF:
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Client-Specific APIs</div><div class="interview-q">When discussing API gateway vs BFF: "BFF is different from API Gateway — the Gateway is infrastructure (auth, rate limiting, routing), while BFF is application logic (aggregation, transformation). Mobile clients need different data shapes than web. Having separate mobile and web BFFs means the mobile team can iterate on their API independently without breaking web."</div></div>`,
         },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Client
+  │
+  ▼
+API Gateway
+  │
+  ├── User Service
+  ├── Product Service
+  ├── Order Service
+  └── Payment Service</div>`,
+        },
       ],
     },
 
@@ -465,6 +531,24 @@ Each microservice receives:
           color: "si-orange",
           title: "Interview Insight",
           body: `<div class="interview-card"><div class="interview-label">Microservices Entry Point</div><div class="interview-q">In any microservices system design, include an API Gateway: "All external traffic enters through Kong API Gateway. It handles JWT validation, rate limiting, and routes to the appropriate service. Microservices are on private subnets — not directly accessible. This centralises security logic and means each microservice only needs to handle its domain logic." Drawing the gateway as the entry point to all services is a strong architectural signal.</div></div>`,
+        },
+        {
+          icon: "🔷",
+          color: "si-cyan",
+          title: "Quick Visual",
+          body: `<div class="diagram-box">Internet
+   │
+   ▼
+Load Balancer
+   │
+   ▼
+EC2 Instances
+   │
+   ▼
+RDS Database
+   │
+   ▼
+S3 Storage</div>`,
         },
       ],
     },

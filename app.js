@@ -277,6 +277,8 @@
     const topic = allTopics.find((t) => t.id === topicId);
     if (!topic) return;
     state.currentTopicId = topicId;
+    $("diagramsScreen").classList.add("hidden");
+    if (window.DiagramEngine) DiagramEngine.cleanup();
 
     // Update breadcrumb
     const part = PARTS.find((p) => p.topics.some((t) => t.id === topicId));
@@ -294,6 +296,8 @@
   /* ─── Show welcome screen ────────────────────────── */
   function showWelcome() {
     state.currentTopicId = null;
+    $("diagramsScreen").classList.add("hidden");
+    if (window.DiagramEngine) DiagramEngine.cleanup();
     $("topicContent").classList.add("hidden");
     $("welcomeScreen").classList.remove("hidden");
     $("topbarCrumb").innerHTML = "<span>Welcome to Architect Academy</span>";
@@ -301,6 +305,19 @@
     buildPartsGrid();
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.location.hash = "";
+  }
+
+  /* ─── Show diagrams screen ───────────────────────── */
+  function showDiagrams(tab) {
+    if (window.DiagramEngine) DiagramEngine.cleanup();
+    state.currentTopicId = null;
+    $("topicContent").classList.add("hidden");
+    $("welcomeScreen").classList.add("hidden");
+    $("diagramsScreen").classList.remove("hidden");
+    $("topbarCrumb").innerHTML = "<span>🗂️ Architecture Diagrams</span>";
+    if (window.DiagramEngine) DiagramEngine.show(tab || "animated");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.location.hash = "diagrams";
   }
 
   /* ─── Search ─────────────────────────────────────── */
@@ -406,7 +423,8 @@
 
     // Brand click → welcome
     document.querySelector(".brand").addEventListener("click", showWelcome);
-
+    // Diagrams button
+    $("diagramsBtn").addEventListener("click", () => showDiagrams());
     // Keyboard shortcut: / to focus search
     document.addEventListener("keydown", (e) => {
       if (e.key === "/" && !e.ctrlKey && !e.metaKey) {
@@ -429,7 +447,9 @@
     // URL hash navigation (back/forward buttons)
     window.addEventListener("hashchange", () => {
       const hash = window.location.hash.replace("#", "");
-      if (hash && allTopics.find((t) => t.id === hash)) {
+      if (hash === "diagrams") {
+        showDiagrams();
+      } else if (hash && allTopics.find((t) => t.id === hash)) {
         navigateTo(hash);
       } else if (!hash) {
         showWelcome();

@@ -567,6 +567,13 @@ body {
   transition: transform var(--trans);
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .topbar-crumb {
   flex: 1;
   font-size: 14px;
@@ -1423,5 +1430,725 @@ code {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/*  DIAGRAMS ENGINE                                        */
+/* ═══════════════════════════════════════════════════════ */
+
+/* ── Topbar Diagrams Button ──────────────────────────── */
+.btn-diagrams {
+  font-size: 16px;
+}
+
+/* ── Diagrams Screen ─────────────────────────────────── */
+.diagrams-screen {
+  padding: 0;
+  width: 100%;
+}
+.diag-screen-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+.diag-screen-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.diag-screen-title {
+  font-size: 28px;
+  font-weight: 800;
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.diag-screen-subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* ── Tabs ────────────────────────────────────────────── */
+.diag-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 6px;
+  flex-wrap: wrap;
+}
+.diag-tab {
+  flex: 1;
+  min-width: 140px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans);
+  text-align: center;
+}
+.diag-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.diag-tab.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/*  ANIMATED FLOWS                                         */
+/* ═══════════════════════════════════════════════════════ */
+
+.anim-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Flow Picker */
+.anim-flow-picker {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.anim-flow-pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.anim-flow-pick:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+.anim-flow-pick.active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  color: var(--text-accent);
+}
+
+/* Flow Card */
+.anim-flow-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-md);
+}
+.anim-flow-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+.anim-flow-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* Animation Layout */
+.anim-layout {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.anim-nodes-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.anim-node-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Nodes */
+.anim-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  transition: all 0.35s ease;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  user-select: none;
+}
+.anim-node:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+.anim-node-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.anim-node-label {
+  line-height: 1.2;
+}
+.anim-node.anim-visited {
+  border-color: var(--accent);
+  background: rgba(99, 102, 241, 0.08);
+  color: var(--text-primary);
+  opacity: 0.7;
+}
+.anim-node.anim-active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  color: var(--text-accent);
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+  opacity: 1;
+}
+
+/* Arrows between nodes */
+.anim-arrow {
+  font-size: 20px;
+  color: var(--border);
+  margin: 4px 0;
+  transition: color 0.35s ease;
+  line-height: 1;
+}
+.anim-arrow-active {
+  color: var(--accent);
+}
+
+/* Step Info Panel */
+.anim-info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.anim-step-info {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  min-height: 120px;
+}
+.anim-step-counter {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.anim-step-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.anim-step-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Controls */
+.anim-controls {
+  display: flex;
+  gap: 8px;
+}
+.anim-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.anim-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text-accent);
+}
+.anim-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.anim-btn-play {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.anim-btn-play:hover {
+  background: var(--accent-hover, #5558e3);
+  border-color: var(--accent-hover, #5558e3);
+  color: #fff !important;
+}
+
+/* Step Dots */
+.anim-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.anim-step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+}
+.anim-step-dot.done {
+  background: var(--accent);
+  border-color: var(--accent);
+  opacity: 0.55;
+}
+.anim-step-dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: scale(1.4);
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/*  INTERACTIVE DIAGRAMS                                   */
+/* ═══════════════════════════════════════════════════════ */
+
+.idiag-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.idiag-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.idiag-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.idiag-card-icon {
+  font-size: 28px;
+}
+.idiag-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+.idiag-card-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Diagram Area */
+.idiag-diagram-area {
+  padding: 20px 24px;
+}
+.idiag-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Nodes */
+.idiag-nodes {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+}
+.idiag-tree {
+  align-items: center;
+}
+.idiag-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-tertiary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+}
+.idiag-node:hover {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.idiag-node.idiag-selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  color: var(--text-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+.idiag-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.idiag-label {
+  font-size: 14px;
+  font-weight: 600;
+  flex: 1;
+}
+.idiag-hint {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.idiag-conn {
+  text-align: center;
+  font-size: 16px;
+  color: var(--text-muted);
+  padding: 2px 0;
+}
+
+/* Info Panel */
+.idiag-info-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  min-height: 180px;
+  display: flex;
+  align-items: flex-start;
+}
+.idiag-info-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  gap: 10px;
+  color: var(--text-muted);
+  padding: 20px;
+}
+.idiag-info-icon {
+  font-size: 28px;
+}
+.idiag-info-content {
+  width: 100%;
+}
+.idiag-info-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.idiag-info-big-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.idiag-info-header h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-accent);
+}
+.idiag-info-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/*  COMPANY ARCHITECTURES                                  */
+/* ═══════════════════════════════════════════════════════ */
+
+.arch-tab {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+  gap: 24px;
+}
+.arch-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--trans);
+}
+.arch-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+.arch-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px 16px;
+}
+.arch-card-icon {
+  font-size: 28px;
+}
+.arch-card-company {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+.arch-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.arch-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.arch-diagram {
+  padding: 18px 16px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.arch-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  transition: all var(--trans);
+}
+.arch-node-user {
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: var(--text-accent);
+}
+.arch-node-infra {
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  color: #14b8a6;
+}
+.arch-node-service {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+.arch-node-data {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+.arch-node-cache {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+.arch-node-queue {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #a855f7;
+}
+.arch-children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 4px;
+}
+.arch-child {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.arch-node-arrow {
+  font-size: 14px;
+  color: var(--border);
+  margin: 3px 0;
+  text-align: center;
+}
+.arch-insights {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.arch-insights-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.arch-insight-item {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+}
+.arch-insight-item:last-child {
+  border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════ */
+/*  DIAGRAM LIBRARY                                        */
+/* ═══════════════════════════════════════════════════════ */
+
+.lib-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.lib-intro {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.lib-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: box-shadow var(--trans);
+}
+.lib-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.lib-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.lib-card-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+}
+.lib-card-category {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.lib-card-items {
+  list-style: none;
+  padding: 10px 16px 14px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.lib-card-item {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 3px 0;
+}
+
+/* ── Welcome screen diagram promo ───────────────────── */
+.welcome-diag-promo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0 8px;
+}
+.btn-diag-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-xl);
+  background: var(--accent-glow);
+  color: var(--text-accent);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.btn-diag-promo:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 700px) {
+  .anim-layout {
+    grid-template-columns: 1fr;
+  }
+  .idiag-wrapper {
+    grid-template-columns: 1fr;
+  }
+  .arch-tab {
+    grid-template-columns: 1fr;
+  }
+  .arch-card-body {
+    grid-template-columns: 1fr;
+  }
+  .arch-diagram {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .diag-tabs {
+    gap: 4px;
+  }
+  .diag-tab {
+    min-width: 100px;
+    font-size: 12px;
+    padding: 8px 10px;
   }
 }
