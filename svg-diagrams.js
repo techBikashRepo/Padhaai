@@ -387,7 +387,7 @@
     },
   };
 
-  DIAGRAMS["p6t2"] = {
+  DIAGRAMS["p9t5"] = {
     title: "Database Replication",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -731,7 +731,7 @@
     },
   };
 
-  DIAGRAMS["p2t10"] = {
+  DIAGRAMS["p5t5"] = {
     title: "GraphQL vs REST",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -843,7 +843,7 @@
      Part 11 — Distributed Systems
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p12t4"] = {
+  DIAGRAMS["p11t4"] = {
     title: "CAP Theorem",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -860,7 +860,7 @@
     },
   };
 
-  DIAGRAMS["p6t4"] = {
+  DIAGRAMS["p7t5"] = {
     title: "Consistent Hashing",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -954,6 +954,7 @@
       p6: "p6t1",
       p7: "p7t2",
       p8: "p8t1",
+      p9: "p9t5",
       p10: "p10t5",
       p11: "p11t1",
       p12: "p12t1",
