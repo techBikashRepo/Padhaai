@@ -192,7 +192,7 @@
     },
   };
 
-  DIAGRAMS["p1t2"] = {
+  DIAGRAMS["p1t14"] = {
     title: "HTTP Request / Response Lifecycle",
     legend: [
       { color: C.client.stroke, label: "Client" },
@@ -218,7 +218,7 @@
     },
   };
 
-  DIAGRAMS["p1t3"] = {
+  DIAGRAMS["p2t1"] = {
     title: "REST API Design",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -242,7 +242,7 @@
     },
   };
 
-  DIAGRAMS["p1t4"] = {
+  DIAGRAMS["p1t9"] = {
     title: "DNS Resolution Flow",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg">
@@ -263,7 +263,7 @@
     },
   };
 
-  DIAGRAMS["p1t5"] = {
+  DIAGRAMS["p1t12"] = {
     title: "TCP / IP Three-Way Handshake",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 500 190" xmlns="http://www.w3.org/2000/svg">
@@ -280,7 +280,7 @@
     },
   };
 
-  DIAGRAMS["p1t6"] = {
+  DIAGRAMS["p8t1"] = {
     title: "WebSocket vs REST",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -310,7 +310,7 @@
      Part 2 — Databases
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p2t1"] = {
+  DIAGRAMS["p4t1"] = {
     title: "SQL vs NoSQL Data Models",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -341,7 +341,7 @@
     },
   };
 
-  DIAGRAMS["p2t2"] = {
+  DIAGRAMS["p4t12"] = {
     title: "Database Indexing — B-Tree",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -365,7 +365,7 @@
     },
   };
 
-  DIAGRAMS["p2t3"] = {
+  DIAGRAMS["p4t16"] = {
     title: "ACID Properties",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -387,7 +387,7 @@
     },
   };
 
-  DIAGRAMS["p2t4"] = {
+  DIAGRAMS["p6t2"] = {
     title: "Database Replication",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -412,7 +412,7 @@
      Part 3 — Caching
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p3t1"] = {
+  DIAGRAMS["p7t2"] = {
     title: "Cache-Aside Pattern",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -433,7 +433,7 @@
     },
   };
 
-  DIAGRAMS["p3t2"] = {
+  DIAGRAMS["p7t7"] = {
     title: "Redis Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -462,7 +462,7 @@
      Part 4 — Message Queues / Kafka
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p4t1"] = {
+  DIAGRAMS["p8t5"] = {
     title: "Kafka Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -487,7 +487,7 @@
     },
   };
 
-  DIAGRAMS["p4t2"] = {
+  DIAGRAMS["p8t4"] = {
     title: "Message Queue — Pub/Sub Pattern",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg">
@@ -510,7 +510,7 @@
      Part 5 — System Design Patterns
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p5t1"] = {
+  DIAGRAMS["p12t2"] = {
     title: "E-Commerce System Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg">
@@ -538,7 +538,7 @@
     },
   };
 
-  DIAGRAMS["p5t2"] = {
+  DIAGRAMS["p5t1"] = {
     title: "Microservices Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -564,7 +564,7 @@
     },
   };
 
-  DIAGRAMS["p5t3"] = {
+  DIAGRAMS["p1t25"] = {
     title: "Content Delivery Network (CDN)",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 175" xmlns="http://www.w3.org/2000/svg">
@@ -613,7 +613,7 @@
     },
   };
 
-  DIAGRAMS["p6t2"] = {
+  DIAGRAMS["p6t5"] = {
     title: "Load Balancing Algorithms",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -634,7 +634,7 @@
     },
   };
 
-  DIAGRAMS["p6t3"] = {
+  DIAGRAMS["p3t9"] = {
     title: "Rate Limiting (Token Bucket)",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
@@ -657,7 +657,7 @@
      Part 7 — Security & Auth
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p7t1"] = {
+  DIAGRAMS["p3t3"] = {
     title: "JWT Authentication Flow",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -680,7 +680,7 @@
     },
   };
 
-  DIAGRAMS["p7t2"] = {
+  DIAGRAMS["p3t4"] = {
     title: "OAuth 2.0 Authorization Code Flow",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -706,7 +706,7 @@
      Part 8 — API Design
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p8t1"] = {
+  DIAGRAMS["p5t6"] = {
     title: "API Gateway Pattern",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -731,7 +731,7 @@
     },
   };
 
-  DIAGRAMS["p8t2"] = {
+  DIAGRAMS["p2t10"] = {
     title: "GraphQL vs REST",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -760,7 +760,7 @@
      Part 9 — Cloud & Containers
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p9t1"] = {
+  DIAGRAMS["p10t5"] = {
     title: "Container Orchestration (Kubernetes)",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -792,7 +792,7 @@
     },
   };
 
-  DIAGRAMS["p9t2"] = {
+  DIAGRAMS["p11t1"] = {
     title: "CI/CD Pipeline",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 130" xmlns="http://www.w3.org/2000/svg">
@@ -817,7 +817,7 @@
      Part 10 — Observability
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p10t1"] = {
+  DIAGRAMS["p11t3"] = {
     title: "Observability: Metrics, Logs, Traces",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 185" xmlns="http://www.w3.org/2000/svg">
@@ -843,7 +843,7 @@
      Part 11 — Distributed Systems
   ───────────────────────────────────────────────── */
 
-  DIAGRAMS["p11t1"] = {
+  DIAGRAMS["p12t4"] = {
     title: "CAP Theorem",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 200" xmlns="http://www.w3.org/2000/svg">
@@ -860,7 +860,7 @@
     },
   };
 
-  DIAGRAMS["p11t2"] = {
+  DIAGRAMS["p6t4"] = {
     title: "Consistent Hashing",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 190" xmlns="http://www.w3.org/2000/svg">
@@ -914,7 +914,7 @@
     },
   };
 
-  DIAGRAMS["p12t2"] = {
+  DIAGRAMS["p12t3"] = {
     title: "Design Twitter/X Feed Architecture",
     render() {
       return `<svg class="svgd-svg" viewBox="0 0 520 195" xmlns="http://www.w3.org/2000/svg">
@@ -948,14 +948,13 @@
     const maps = {
       p1: "p1t1",
       p2: "p2t1",
-      p3: "p3t1",
+      p3: "p3t3",
       p4: "p4t1",
       p5: "p5t1",
       p6: "p6t1",
-      p7: "p7t1",
+      p7: "p7t2",
       p8: "p8t1",
-      p9: "p9t1",
-      p10: "p10t1",
+      p10: "p10t5",
       p11: "p11t1",
       p12: "p12t1",
     };
