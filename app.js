@@ -190,6 +190,7 @@
     const prevT = tIndex > 0 ? topics[tIndex - 1] : null;
     const nextT = tIndex < topics.length - 1 ? topics[tIndex + 1] : null;
     const done = isCompleted(topic.id);
+    const hasDiag = window.SVGDiagrams && SVGDiagrams.hasDiagram(topic.id);
 
     // Build sections HTML
     const sectionsHTML = topic.sections
@@ -206,6 +207,36 @@
       )
       .join("");
 
+    const navBar = `
+      <div class="topic-nav-bar">
+        <div class="nav-hint">
+          ${prevT ? `← <span style="color:var(--text-accent);cursor:pointer" id="prevHint">${prevT.title}</span>` : '<span style="color:var(--text-muted)">Beginning</span>'}
+        </div>
+        <div class="nav-hint">
+          ${nextT ? `<span style="color:var(--text-accent);cursor:pointer" id="nextHint">${nextT.title}</span> →` : '<span style="color:var(--text-muted)">End of module</span>'}
+        </div>
+      </div>`;
+
+    const diagramAside = hasDiag
+      ? `
+      <aside class="topic-diagram-aside">
+        <div class="topic-diagram-aside-title">
+          <span>◈</span> Architecture Diagram
+        </div>
+        <div id="svgDiagramSlot"></div>
+      </aside>`
+      : "";
+
+    const mainContent = hasDiag
+      ? `<div class="topic-layout">
+          <div class="topic-main">
+            <div class="topic-sections">${sectionsHTML}</div>
+            ${navBar}
+          </div>
+          ${diagramAside}
+        </div>`
+      : `<div class="topic-sections">${sectionsHTML}</div>${navBar}`;
+
     const html = `
       <div class="topic-header">
         <div class="topic-header-left">
@@ -221,20 +252,18 @@
           <button class="btn-nav" id="btnNext" ${!nextT ? "disabled" : ""}>Next →</button>
         </div>
       </div>
-      <div class="topic-sections">${sectionsHTML}</div>
-      <div class="topic-nav-bar">
-        <div class="nav-hint">
-          ${prevT ? `← <span style="color:var(--text-accent);cursor:pointer" id="prevHint">${prevT.title}</span>` : '<span style="color:var(--text-muted)">Beginning</span>'}
-        </div>
-        <div class="nav-hint">
-          ${nextT ? `<span style="color:var(--text-accent);cursor:pointer" id="nextHint">${nextT.title}</span> →` : '<span style="color:var(--text-muted)">End of module</span>'}
-        </div>
-      </div>`;
+      ${mainContent}`;
 
     const contentEl = $("topicContent");
     contentEl.innerHTML = html;
     contentEl.classList.remove("hidden");
     $("welcomeScreen").classList.add("hidden");
+
+    // Render SVG diagram if available
+    if (hasDiag) {
+      const slot = document.getElementById("svgDiagramSlot");
+      if (slot) SVGDiagrams.render(topic.id, slot);
+    }
 
     // Section collapse/expand
     contentEl.querySelectorAll(".section-header").forEach((hdr) => {
