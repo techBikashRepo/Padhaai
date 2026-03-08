@@ -307,7 +307,9 @@
     if (!topic) return;
     state.currentTopicId = topicId;
     $("diagramsScreen").classList.add("hidden");
+    $("labsScreen").classList.add("hidden");
     if (window.DiagramEngine) DiagramEngine.cleanup();
+    if (window.ArchLabs) ArchLabs.cleanup();
 
     // Update breadcrumb
     const part = PARTS.find((p) => p.topics.some((t) => t.id === topicId));
@@ -326,7 +328,9 @@
   function showWelcome() {
     state.currentTopicId = null;
     $("diagramsScreen").classList.add("hidden");
+    $("labsScreen").classList.add("hidden");
     if (window.DiagramEngine) DiagramEngine.cleanup();
+    if (window.ArchLabs) ArchLabs.cleanup();
     $("topicContent").classList.add("hidden");
     $("welcomeScreen").classList.remove("hidden");
     $("topbarCrumb").innerHTML = "<span>Welcome to Architect Academy</span>";
@@ -339,14 +343,31 @@
   /* ─── Show diagrams screen ───────────────────────── */
   function showDiagrams(tab) {
     if (window.DiagramEngine) DiagramEngine.cleanup();
+    if (window.ArchLabs) ArchLabs.cleanup();
     state.currentTopicId = null;
     $("topicContent").classList.add("hidden");
     $("welcomeScreen").classList.add("hidden");
+    $("labsScreen").classList.add("hidden");
     $("diagramsScreen").classList.remove("hidden");
     $("topbarCrumb").innerHTML = "<span>🗂️ Architecture Diagrams</span>";
     if (window.DiagramEngine) DiagramEngine.show(tab || "animated");
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.location.hash = "diagrams";
+  }
+
+  /* ─── Show labs screen ─────────────────────────────────────────────── */
+  function showLabs(tab) {
+    if (window.DiagramEngine) DiagramEngine.cleanup();
+    if (window.ArchLabs) ArchLabs.cleanup();
+    state.currentTopicId = null;
+    $("topicContent").classList.add("hidden");
+    $("welcomeScreen").classList.add("hidden");
+    $("diagramsScreen").classList.add("hidden");
+    $("labsScreen").classList.remove("hidden");
+    $("topbarCrumb").innerHTML = "<span>⚗️ Architecture Labs</span>";
+    if (window.ArchLabs) ArchLabs.show(tab || "simulator", $("labsScreen"));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.location.hash = "labs";
   }
 
   /* ─── Search ─────────────────────────────────────── */
@@ -454,6 +475,8 @@
     document.querySelector(".brand").addEventListener("click", showWelcome);
     // Diagrams button
     $("diagramsBtn").addEventListener("click", () => showDiagrams());
+    // Labs button
+    $("labsBtn").addEventListener("click", () => showLabs());
     // Keyboard shortcut: / to focus search
     document.addEventListener("keydown", (e) => {
       if (e.key === "/" && !e.ctrlKey && !e.metaKey) {
@@ -478,6 +501,8 @@
       const hash = window.location.hash.replace("#", "");
       if (hash === "diagrams") {
         showDiagrams();
+      } else if (hash === "labs") {
+        showLabs();
       } else if (hash && allTopics.find((t) => t.id === hash)) {
         navigateTo(hash);
       } else if (!hash) {

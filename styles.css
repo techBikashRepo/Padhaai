@@ -1600,9 +1600,18 @@ code {
 /*  DIAGRAMS ENGINE                                        */
 /* ═══════════════════════════════════════════════════════ */
 
-/* ── Topbar Diagrams Button ──────────────────────────── */
+/* ── Topbar Diagrams + Labs Buttons ─────────────────── */
 .btn-diagrams {
   font-size: 16px;
+}
+.btn-labs {
+  font-size: 16px;
+}
+
+/* ── Labs Screen ─────────────────────────────────────── */
+.labs-screen {
+  padding: 0;
+  width: 100%;
 }
 
 /* ── Diagrams Screen ─────────────────────────────────── */

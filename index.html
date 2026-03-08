@@ -14,6 +14,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="labs.css" />
   </head>
   <body>
     <!-- ===== OVERLAY (mobile sidebar) ===== -->
@@ -88,6 +89,13 @@
         </div>
         <div class="topbar-actions">
           <button
+            class="btn-icon btn-labs"
+            id="labsBtn"
+            title="Architecture Labs — Simulator, Cases, Patterns"
+          >
+            ⚗️
+          </button>
+          <button
             class="btn-icon btn-diagrams"
             id="diagramsBtn"
             title="Architecture Diagrams"
@@ -110,6 +118,7 @@
               <span class="platform-pill platform-pill-new"
                 >✨ Animated SVG Diagrams</span
               >
+              <span class="platform-pill">⚗️ Interactive Labs</span>
               <span class="platform-pill">🎯 Interview Ready</span>
             </div>
             <h1 class="hero-title">
@@ -139,6 +148,11 @@
               </div>
               <div class="hero-stat-divider"></div>
               <div class="hero-stat">
+                <div class="hero-stat-num">20+</div>
+                <div class="hero-stat-label">Interactive Labs</div>
+              </div>
+              <div class="hero-stat-divider"></div>
+              <div class="hero-stat">
                 <div class="hero-stat-num">∞</div>
                 <div class="hero-stat-label">Real Examples</div>
               </div>
@@ -156,6 +170,9 @@
 
         <!-- Diagrams Screen -->
         <div class="diagrams-screen hidden" id="diagramsScreen"></div>
+
+        <!-- Labs Screen -->
+        <div class="labs-screen hidden" id="labsScreen"></div>
       </div>
     </main>
 
@@ -176,6 +193,7 @@
     <script src="topics.js"></script>
     <script src="svg-diagrams.js"></script>
     <script src="diagrams.js"></script>
+    <script src="labs.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
