@@ -700,49 +700,6 @@ body {
   letter-spacing: 0.07em;
 }
 
-/* Story flow */
-.welcome-story {
-  margin: 0 auto 48px;
-  max-width: 480px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 28px 32px;
-  box-shadow: var(--shadow-md);
-}
-.welcome-story h2 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-}
-.story-flow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-}
-.story-step {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 500;
-  width: 100%;
-  text-align: center;
-  transition: all var(--trans);
-}
-.story-step:hover {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-  color: var(--text-accent);
-}
-.story-arrow {
-  font-size: 18px;
-  color: var(--accent);
-  margin: 2px 0;
-}
-
 /* Parts Grid */
 .welcome-parts {
   max-width: 900px;
