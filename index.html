@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Architect Academy — System Design Mastery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ===== OVERLAY (mobile sidebar) ===== -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">⚡</div>
+          <div class="brand-text">
+            <span class="brand-name">Architect</span>
+            <span class="brand-sub">Academy</span>
+          </div>
+        </div>
+        <button class="sidebar-close" id="sidebarClose" title="Close sidebar">
+          ✕
+        </button>
+      </div>
+
+      <!-- Search inside sidebar -->
+      <div class="sidebar-search">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search topics…"
+          autocomplete="off"
+        />
+        <button class="search-clear" id="searchClear" title="Clear search">
+          ✕
+        </button>
+      </div>
+
+      <!-- Search Results -->
+      <div class="search-results" id="searchResults"></div>
+
+      <!-- Overall Progress -->
+      <div class="sidebar-progress">
+        <div class="progress-header">
+          <span>Your Progress</span>
+          <span class="progress-label" id="progressLabel">0%</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+        <div class="progress-count" id="progressCount">
+          0 / 0 topics completed
+        </div>
+      </div>
+
+      <!-- Navigation Parts -->
+      <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle" id="themeToggle">
+          <span id="themeIcon">☀️</span>
+          <span id="themeLabel">Light Mode</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main" id="main">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <button class="hamburger" id="hamburger" title="Toggle sidebar">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="topbar-crumb" id="topbarCrumb">
+          <span>Welcome to Architect Academy</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="topThemeToggle" title="Toggle theme">
+            🌙
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content-area" id="contentArea">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-hero">
+            <div class="hero-badge">🏛️ Architect Academy</div>
+            <h1 class="hero-title">
+              Master System Design<br /><span class="gradient-text"
+                >from Zero to Architect</span
+              >
+            </h1>
+            <p class="hero-subtitle">
+              Learn complete backend architecture through the story of building
+              an Amazon-like e-commerce platform. Every concept connects — from
+              a user's first click to planet-scale infrastructure.
+            </p>
+            <div class="hero-stats">
+              <div class="stat-card">
+                <div class="stat-num" id="totalTopicsCount">120+</div>
+                <div class="stat-label">Topics</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num">12</div>
+                <div class="stat-label">Modules</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-num">∞</div>
+                <div class="stat-label">Real Examples</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="welcome-story">
+            <h2>📖 The Learning Story</h2>
+            <div class="story-flow">
+              <div class="story-step">👤 User opens website</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">🔍 Searches for a product</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">🔐 Logs in securely</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">🛒 Places an order</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">💳 Payment processed</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">📦 Shipped &amp; tracked</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">📈 System scales globally</div>
+              <div class="story-arrow">↓</div>
+              <div class="story-step">☁️ Cloud infrastructure</div>
+            </div>
+          </div>
+
+          <div class="welcome-parts">
+            <h2>📚 Learning Roadmap</h2>
+            <div class="parts-grid" id="partsGrid"></div>
+          </div>
+        </div>
+
+        <!-- Topic Content -->
+        <div class="topic-content hidden" id="topicContent"></div>
+      </div>
+    </main>
+
+    <!-- Part data files (loaded first) -->
+    <script src="data/part1.js"></script>
+    <script src="data/part2.js"></script>
+    <script src="data/part3.js"></script>
+    <script src="data/part4.js"></script>
+    <script src="data/part5.js"></script>
+    <script src="data/part6.js"></script>
+    <script src="data/part7.js"></script>
+    <script src="data/part8.js"></script>
+    <script src="data/part9.js"></script>
+    <script src="data/part10.js"></script>
+    <script src="data/part11.js"></script>
+    <script src="data/part12.js"></script>
+    <!-- Assembler + App -->
+    <script src="topics.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
