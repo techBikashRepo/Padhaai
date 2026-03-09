@@ -158,6 +158,437 @@
         },
       ],
     },
+
+    /* ── User Login / Authentication ── */
+    {
+      id: "flow-login",
+      title: "User Login / Authentication",
+      icon: "🔐",
+      description:
+        "How credentials become a JWT and secure every subsequent request",
+      nodes: [
+        { id: "l0", label: "Browser", icon: "👤" },
+        { id: "l1", label: "API Gateway", icon: "🚪" },
+        { id: "l2", label: "Auth Service", icon: "🔐" },
+        { id: "l3", label: "User DB", icon: "🗄️" },
+        { id: "l4", label: "Token Store", icon: "⚡" },
+      ],
+      steps: [
+        {
+          nodeId: "l0",
+          title: "Step 1 — User Submits Credentials",
+          desc: "Priya enters her email and password and clicks Login. The browser sends POST /api/auth/login with a JSON body { email, password } over HTTPS. The password never travels in plain text — TLS encrypts the entire request body.",
+        },
+        {
+          nodeId: "l1",
+          title: "Step 2 — API Gateway Receives Request",
+          desc: "The API Gateway accepts the request, terminates TLS, applies rate limiting (e.g., max 5 login attempts per minute per IP to prevent brute-force), and forwards the request to the Auth Service. No authentication check is needed here — the user is not yet logged in.",
+        },
+        {
+          nodeId: "l2",
+          title: "Step 3 — Auth Service Validates",
+          desc: "Auth Service extracts the email, queries the User DB for the stored bcrypt hash, and calls bcrypt.compare(inputPassword, storedHash). bcrypt is intentionally slow (~100ms) to make brute-force attacks expensive. If the hash matches, authentication succeeds.",
+        },
+        {
+          nodeId: "l3",
+          title: "Step 4 — User Record Retrieved",
+          desc: "The User DB returns the full user record: id, email, roles, account status. Auth Service checks: is the account active? is the email verified? is MFA enabled? If all checks pass, it proceeds to generate a token. A failed check returns 401 Unauthorized.",
+        },
+        {
+          nodeId: "l4",
+          title: "Step 5 — Refresh Token Stored",
+          desc: "Auth Service generates two tokens: (1) Access Token — a short-lived JWT (15 min) containing userId and roles, signed with a private key. (2) Refresh Token — a long-lived opaque token (7 days) stored in Redis with a TTL. The refresh token allows getting new access tokens without re-logging in.",
+        },
+        {
+          nodeId: "l0",
+          title: "Step 6 — Tokens Sent to Browser",
+          desc: "The access JWT is returned in the response body. The refresh token is set as an HttpOnly, Secure, SameSite=Strict cookie — JavaScript cannot read it, protecting against XSS. All subsequent API calls include the JWT in the Authorization: Bearer <token> header. The server validates the JWT signature on each request — no DB lookup needed for auth.",
+        },
+      ],
+    },
+
+    /* ── Load Balancer Flow ── */
+    {
+      id: "flow-loadbalancer",
+      title: "Load Balancer Flow",
+      icon: "⚖️",
+      description:
+        "How traffic is distributed, health-checked, and routed across servers",
+      nodes: [
+        { id: "lb0", label: "Incoming Requests", icon: "🌐" },
+        { id: "lb1", label: "Load Balancer", icon: "⚖️" },
+        { id: "lb2", label: "Server A", icon: "⚙️" },
+        { id: "lb3", label: "Server B", icon: "⚙️" },
+        { id: "lb4", label: "Server C", icon: "⚙️" },
+      ],
+      steps: [
+        {
+          nodeId: "lb0",
+          title: "Step 1 — Traffic Arrives",
+          desc: "ShopKart's DNS resolves to the Load Balancer's IP (or an Elastic IP / Anycast address). All requests from all users worldwide arrive at this single entry point first. The Load Balancer is the only component exposed to the internet — app servers are in a private subnet.",
+        },
+        {
+          nodeId: "lb1",
+          title: "Step 2 — Algorithm Selects a Server",
+          desc: "The Load Balancer applies a routing algorithm. Round Robin: requests cycle through A → B → C → A. Least Connections: pick the server with fewest active connections — best for requests with variable processing time. IP Hash: same user always hits same server (sticky sessions). AWS ALB uses Least Outstanding Requests by default.",
+        },
+        {
+          nodeId: "lb2",
+          title: "Step 3 — Request Forwarded to Server A",
+          desc: "The request is forwarded to Server A with the original client IP preserved in the X-Forwarded-For header. Server A processes the request, queries its services, and returns the response. The Load Balancer proxies the response back to the client. The client never knows Server A's private IP address.",
+        },
+        {
+          nodeId: "lb3",
+          title: "Step 4 — Health Checks Running Continuously",
+          desc: "Every 30 seconds, the Load Balancer sends GET /health to each server. Server B responds 200 OK → healthy, keeps receiving traffic. If any server returns 5xx or times out 3 consecutive times, the LB marks it unhealthy and stops sending it traffic. When it recovers and passes health checks, it's added back automatically.",
+        },
+        {
+          nodeId: "lb4",
+          title: "Step 5 — Server C Fails",
+          desc: "Server C crashes. Its /health endpoint stops responding. After 3 failed checks (90 seconds), the Load Balancer removes Server C from the pool. All new requests now route only to A and B. Users never see the failure — they may notice slightly slower responses during the rebalancing window, but zero errors.",
+        },
+        {
+          nodeId: "lb1",
+          title: "Step 6 — SSL Termination & Headers",
+          desc: "Modern load balancers (AWS ALB, NGINX, HAProxy) also terminate TLS — they decrypt HTTPS at the LB, forwarding plain HTTP to private servers. This offloads expensive cryptography from app servers. The LB injects X-Forwarded-Proto: https so the app knows the original request was secure.",
+        },
+      ],
+    },
+
+    /* ── CDN Flow ── */
+    {
+      id: "flow-cdn",
+      title: "CDN Flow",
+      icon: "🌍",
+      description:
+        "How static assets travel from origin to edge and get cached globally",
+      nodes: [
+        { id: "cdn0", label: "User Browser", icon: "👤" },
+        { id: "cdn1", label: "CDN Edge Node", icon: "🌍" },
+        { id: "cdn2", label: "CDN Network", icon: "🔀" },
+        { id: "cdn3", label: "Origin Server", icon: "⚙️" },
+        { id: "cdn4", label: "S3 / Storage", icon: "🪣" },
+      ],
+      steps: [
+        {
+          nodeId: "cdn0",
+          title: "Step 1 — Browser Requests Asset",
+          desc: "Priya's browser in Chennai needs to load shopkart.com's homepage image: GET https://cdn.shopkart.com/images/hero-banner.jpg. DNS resolves cdn.shopkart.com via Anycast routing to the nearest CDN PoP (Point of Presence) — in this case, the Chennai edge node, ~5ms away.",
+        },
+        {
+          nodeId: "cdn1",
+          title: "Step 2 — Edge Node Cache Check",
+          desc: "The Chennai CDN edge node checks its local cache for hero-banner.jpg. Cache HIT: the file was cached from a previous request. It returns the file immediately from local SSD — response time ~5ms. Cache MISS: the file is not cached. The edge node must fetch it from the origin.",
+        },
+        {
+          nodeId: "cdn2",
+          title: "Step 3 — Edge Fetches from Origin (Cache Miss)",
+          desc: "On a cache miss, the Chennai edge node contacts the nearest CDN backbone node and forwards the request toward ShopKart's origin server. CDN providers have private high-speed networks (AWS backbone, Cloudflare's Argo Smart Routing) — travel time is measured in low-double-digit milliseconds even across continents.",
+        },
+        {
+          nodeId: "cdn3",
+          title: "Step 4 — Origin Serves the File",
+          desc: "ShopKart's origin (an Express server or directly an S3 bucket configured as origin) returns the file with cache control headers: Cache-Control: public, max-age=31536000 (1 year). This tells the CDN: you can cache this for 1 year. For versioned assets (hero-banner.v3.jpg), this is safe because the filename changes on every deploy.",
+        },
+        {
+          nodeId: "cdn4",
+          title: "Step 5 — Cached at Edge Globally",
+          desc: "The Chennai edge node caches the file locally for max-age. The next 10,000 users in Chennai get it from edge cache — origin receives zero load. CloudFront has 450+ edge locations. After the first user in each city triggers a cache miss, every subsequent user in that city gets ~5ms responses for up to a year.",
+        },
+        {
+          nodeId: "cdn0",
+          title: "Step 6 — Instant Response to Browser",
+          desc: "Priya's browser receives the image file in ~5ms from the Chennai edge vs ~180ms from a US-based origin. CDN reduces page load time by 60–90% for global users. Static assets (JS, CSS, images, fonts, videos) account for 80–95% of web page bytes — CDN impact is enormous.",
+        },
+      ],
+    },
+
+    /* ── API Request Flow ── */
+    {
+      id: "flow-api",
+      title: "API Request Flow",
+      icon: "🔀",
+      description: "Full lifecycle of a REST API call from client to response",
+      nodes: [
+        { id: "ap0", label: "Client App", icon: "📱" },
+        { id: "ap1", label: "API Gateway", icon: "🚪" },
+        { id: "ap2", label: "Auth Middleware", icon: "🔐" },
+        { id: "ap3", label: "Service Handler", icon: "⚙️" },
+        { id: "ap4", label: "Database / Cache", icon: "🗄️" },
+      ],
+      steps: [
+        {
+          nodeId: "ap0",
+          title: "Step 1 — Client Sends API Request",
+          desc: "The ShopKart mobile app sends GET /api/v1/products/12345 with headers: Authorization: Bearer <JWT>, Accept: application/json, X-Request-ID: uuid-123. The X-Request-ID traces this specific request through every downstream service for debugging and correlation.",
+        },
+        {
+          nodeId: "ap1",
+          title: "Step 2 — API Gateway Processing",
+          desc: "API Gateway (Kong, AWS API Gateway, or NGINX) receives the request. It checks: (1) Is the route /api/v1/products/:id defined? (2) Has the caller exceeded rate limits (e.g., 100 req/min per token)? (3) Is the request size within limits? If any check fails, the gateway returns 429 Too Many Requests or 404 immediately — before any business logic runs.",
+        },
+        {
+          nodeId: "ap2",
+          title: "Step 3 — Authentication & Authorization",
+          desc: "Auth middleware extracts the JWT from the Authorization header, verifies its signature using the public key (no DB call needed — JWTs are self-contained), and checks expiry. It then checks: does this user's role allow GET /products/:id? If the token is invalid or expired, return 401. If valid but insufficient permissions, return 403.",
+        },
+        {
+          nodeId: "ap3",
+          title: "Step 4 — Business Logic Executes",
+          desc: "The Products Service handler receives the authenticated request with the decoded user context (userId, roles). It validates the productId format, applies any business logic (e.g., is this product visible in the user's region?), and fetches the data. This layer never touches the HTTP layer — it works with plain objects.",
+        },
+        {
+          nodeId: "ap4",
+          title: "Step 5 — Data Fetched",
+          desc: "Service checks Redis cache first: GET product:12345. Cache hit returns in <1ms. Cache miss queries PostgreSQL: SELECT * FROM products WHERE id = 12345 — index lookup, ~2ms. Result is stored in Redis (SET product:12345 <json> EX 300) for future requests.",
+        },
+        {
+          nodeId: "ap0",
+          title: "Step 6 — Response Sent to Client",
+          desc: "Service returns the product object. The controller serialises it to JSON, sets response headers (Content-Type: application/json, Cache-Control, ETag for conditional requests), and returns HTTP 200. Total round-trip (cache hit): ~15ms. Total (cache miss + DB): ~30ms. The X-Request-ID is returned so the client can report it for support.",
+        },
+      ],
+    },
+
+    /* ── Database Read/Write Flow ── */
+    {
+      id: "flow-database",
+      title: "Database Read / Write Flow",
+      icon: "🗄️",
+      description:
+        "How reads and writes are routed across primary and replica databases",
+      nodes: [
+        { id: "db0", label: "Application", icon: "⚙️" },
+        { id: "db1", label: "Primary DB", icon: "🗄️" },
+        { id: "db2", label: "Read Replica 1", icon: "📋" },
+        { id: "db3", label: "Read Replica 2", icon: "📋" },
+        { id: "db4", label: "WAL / Replication Log", icon: "📝" },
+      ],
+      steps: [
+        {
+          nodeId: "db0",
+          title: "Step 1 — Application Initiates Operation",
+          desc: "The app layer uses a connection router (PgBouncer, RDS Proxy, or app-level logic) that distinguishes writes from reads. All INSERT, UPDATE, DELETE and SELECT FOR UPDATE (locking reads) are routed to the Primary. All SELECT queries are routed to a Read Replica. This split is configured via two connection strings: DB_WRITE_URL and DB_READ_URL.",
+        },
+        {
+          nodeId: "db1",
+          title: "Step 2 — Write Goes to Primary",
+          desc: "A new order is inserted: INSERT INTO orders (user_id, total, status) VALUES (...). The Primary acquires row-level locks, writes to its transaction log (WAL — Write-Ahead Log), commits the transaction, and returns the new order ID. ACID guarantees that either the full transaction commits or nothing does. Typical write latency: 2–10ms.",
+        },
+        {
+          nodeId: "db4",
+          title: "Step 3 — WAL Shipped to Replicas",
+          desc: "PostgreSQL continuously streams the WAL (Write-Ahead Log) — a binary log of every change — to all Read Replicas. This is asynchronous by default: the Primary commits and responds BEFORE replicas apply the changes. Replication lag is typically 10–100ms on the same region. Synchronous replication (zero lag) halves write throughput — rarely used outside banking systems.",
+        },
+        {
+          nodeId: "db2",
+          title: "Step 4 — Read Routed to Replica 1",
+          desc: "Priya's request to view her orders is routed to Read Replica 1. It runs: SELECT * FROM orders WHERE user_id = 42 ORDER BY created_at DESC. Because this replica is read-only, it has no lock contention from writes. PostgreSQL's MVCC ensures readers never block writers and writers never block readers on the same replica.",
+        },
+        {
+          nodeId: "db3",
+          title: "Step 5 — Load Distributed Across Replicas",
+          desc: "With 2 read replicas, read capacity is roughly tripled. ShopKart routes 80% of all queries to replicas — product pages, search results, order history, user profiles. Only payments and inventory decrements go to the Primary. CloudWatch monitors replica lag — if it exceeds 500ms, the router temporarily sends reads to the Primary to avoid stale data.",
+        },
+        {
+          nodeId: "db0",
+          title: "Step 6 — Connection Pooling Efficiency",
+          desc: "Each app server maintains a pool of 10 persistent connections to Primary and 20 to each Replica (via PgBouncer). When a request arrives, it borrows a connection, executes the query, and returns it to the pool. Without pooling, each request would open a new connection (~100ms). With pooling, connection overhead drops to ~0.1ms.",
+        },
+      ],
+    },
+
+    /* ── Message Queue Flow ── */
+    {
+      id: "flow-mq",
+      title: "Message Queue Flow",
+      icon: "📨",
+      description:
+        "How async message passing decouples services and handles failures",
+      nodes: [
+        { id: "mf0", label: "Order Service", icon: "📋" },
+        { id: "mf1", label: "Kafka / SQS", icon: "📨" },
+        { id: "mf2", label: "Email Worker", icon: "📧" },
+        { id: "mf3", label: "Inventory Worker", icon: "📦" },
+        { id: "mf4", label: "Dead Letter Queue", icon: "💀" },
+      ],
+      steps: [
+        {
+          nodeId: "mf0",
+          title: "Step 1 — Order Service Publishes Event",
+          desc: "Order Service completes an order (charge paid, record written to DB) and publishes a message to the Kafka topic order-confirmed: { orderId: 'ORD-789', userId: 42, items: [...], total: 2499 }. This takes ~1ms. The Order Service does NOT wait for emails or inventory updates — it returns HTTP 200 to the user immediately.",
+        },
+        {
+          nodeId: "mf1",
+          title: "Step 2 — Broker Stores Message Durably",
+          desc: "Kafka writes the message to its partition log on disk with replication factor 3 (3 Kafka brokers each hold a copy). The message is assigned an offset (e.g., offset 10042) in partition 0. Kafka acknowledges receipt only after all 3 replicas have written it — guaranteeing no message is lost even if a broker dies immediately after the publish.",
+        },
+        {
+          nodeId: "mf2",
+          title: "Step 3 — Email Worker Consumes",
+          desc: "Email Worker (Consumer Group: email-group) polls Kafka and picks up the message at offset 10042. It renders the order confirmation template, calls AWS SES to send the email, and commits the offset to mark the message as processed. If SES is down, the offset is not committed — Kafka retries delivery on the next poll. Message is never lost.",
+        },
+        {
+          nodeId: "mf3",
+          title: "Step 4 — Inventory Worker Consumes Independently",
+          desc: "Inventory Worker (Consumer Group: inventory-group) reads the SAME message at the SAME offset 10042 — completely independent of the Email Worker. It decrements stock for each ordered item in the Inventory DB. Consumer groups each maintain their own offset cursor — adding a new consumer (e.g., fraud detection) requires zero changes to the producer or existing consumers.",
+        },
+        {
+          nodeId: "mf4",
+          title: "Step 5 — Dead Letter Queue on Failure",
+          desc: "If the Email Worker fails to process a message 3 times (e.g., corrupt data, unhandled exception), the message is moved to the Dead Letter Queue (DLQ). Engineers are alerted via CloudWatch alarm. The message sits safely in the DLQ — the normal queue is unblocked and keeps processing. Engineers fix the bug and replay messages from the DLQ.",
+        },
+        {
+          nodeId: "mf0",
+          title: "Step 6 — Temporal Decoupling in Action",
+          desc: "Suppose the Email Worker is down for 2 hours for maintenance. The Order Service never knows — it keeps publishing. Kafka retains all messages for 7 days. When Email Worker restarts, it reads all 5,000 messages that accumulated in its absence and processes them in order. This temporal decoupling is impossible with synchronous REST calls between services.",
+        },
+      ],
+    },
+
+    /* ── File Upload Flow ── */
+    {
+      id: "flow-upload",
+      title: "File Upload Flow",
+      icon: "📁",
+      description:
+        "How files travel securely from browser to permanent cloud storage",
+      nodes: [
+        { id: "fu0", label: "Browser", icon: "👤" },
+        { id: "fu1", label: "API Server", icon: "⚙️" },
+        { id: "fu2", label: "S3 Presigned URL", icon: "🔗" },
+        { id: "fu3", label: "S3 Bucket", icon: "🪣" },
+        { id: "fu4", label: "Lambda Processor", icon: "⚡" },
+      ],
+      steps: [
+        {
+          nodeId: "fu0",
+          title: "Step 1 — User Selects a File",
+          desc: "Priya selects her product image (product-photo.jpg, 3.2MB) in the ShopKart seller dashboard. The browser does NOT immediately upload to the server. First, it requests a pre-signed upload URL: POST /api/uploads/presign { filename: 'product-photo.jpg', contentType: 'image/jpeg', size: 3355443 }.",
+        },
+        {
+          nodeId: "fu1",
+          title: "Step 2 — Server Generates Pre-Signed URL",
+          desc: "The API Server validates: is the user authenticated? is 3.2MB within the 10MB limit? is the MIME type allowed? Then it calls AWS S3 SDK to generate a pre-signed URL — a time-limited (e.g., 5-minute) signed URL that grants one-time permission to PUT directly to S3. The key is randomised: uploads/user-42/uuid-abc123.jpg. Server returns this URL to the browser.",
+        },
+        {
+          nodeId: "fu2",
+          title: "Step 3 — Browser Uploads Directly to S3",
+          desc: "The browser sends PUT <presigned-url> with the raw file bytes directly to S3 — bypassing the API server entirely. This is the critical architectural insight: the API server never handles multi-megabyte file bytes. It stays lean. S3 receives the upload directly from the user's browser, saving bandwidth and memory on the app servers.",
+        },
+        {
+          nodeId: "fu3",
+          title: "Step 4 — File Stored in S3",
+          desc: "S3 validates the pre-signed URL signature and expiry, checks the Content-Type matches, stores the file with 11-nines (99.999999999%) durability across multiple AZs, and triggers an S3 ObjectCreated event. The file is initially stored with private ACL — not publicly accessible until processing completes.",
+        },
+        {
+          nodeId: "fu4",
+          title: "Step 5 — Lambda Triggered for Processing",
+          desc: "The S3 ObjectCreated event triggers a Lambda function automatically. Lambda downloads the raw image, uses Sharp/Pillow to generate 3 resized variants (thumbnail 150px, medium 600px, large 1200px), strips EXIF metadata (privacy), runs a malware/content-policy scan, and saves all variants back to S3 under /processed/.",
+        },
+        {
+          nodeId: "fu0",
+          title: "Step 6 — Database Updated, URL Returned",
+          desc: "Lambda updates the Product DB with the processed image URLs: { thumbnail: 'cdn.shopkart.com/processed/uuid-abc123-150.jpg', medium: '...', large: '...' }. It sends an SNS notification to the API server, which stores the URLs and notifies Priya's browser via WebSocket: 'Your image is live!' Total time from upload complete to processed: ~3 seconds.",
+        },
+      ],
+    },
+
+    /* ── Search Flow ── */
+    {
+      id: "flow-search",
+      title: "Search Flow",
+      icon: "🔍",
+      description:
+        "How a search query is processed, ranked, and returned in milliseconds",
+      nodes: [
+        { id: "sf0", label: "User", icon: "👤" },
+        { id: "sf1", label: "Search API", icon: "🔀" },
+        { id: "sf2", label: "Redis Cache", icon: "⚡" },
+        { id: "sf3", label: "Elasticsearch", icon: "🔍" },
+        { id: "sf4", label: "Product DB", icon: "🗄️" },
+      ],
+      steps: [
+        {
+          nodeId: "sf0",
+          title: "Step 1 — User Types a Query",
+          desc: "Rahul types 'nike running shoes size 10' in the search bar. The browser debounces — it waits 300ms after the last keystroke before sending the request (preventing a query on every character). It sends GET /api/search?q=nike+running+shoes+size+10&page=1&sort=relevance&filters=brand:Nike.",
+        },
+        {
+          nodeId: "sf1",
+          title: "Step 2 — Search API Preprocesses Query",
+          desc: "The Search API normalises the query: lowercasing, tokenisation ('nike', 'running', 'shoes', 'size', '10'), stop-word removal ('a', 'the', 'for' are dropped), and synonym expansion ('sneakers' mapped to 'shoes'). It constructs a structured Elasticsearch query with boosting: title matches rank higher than description matches.",
+        },
+        {
+          nodeId: "sf2",
+          title: "Step 3 — Cache Check for Popular Queries",
+          desc: "Popular search terms (> 100 searches/hour) are cached in Redis. The API checks: GET search:nike-running-shoes-size-10:page1. Cache HIT: returns 50 result IDs in ~0.5ms. Cache MISS: proceeds to Elasticsearch. Popular query caching reduces Elasticsearch load by ~40% during peak hours (sale events, mornings).",
+        },
+        {
+          nodeId: "sf3",
+          title: "Step 4 — Elasticsearch Full-Text Search",
+          desc: "Elasticsearch's inverted index maps every word to the documents containing it. Query execution: (1) Term matching across 10M product documents in <10ms using the index, (2) BM25 relevance scoring (considers term frequency, document length, field weighting), (3) Applied filters (brand:Nike, in-stock:true), (4) Returns top-50 productIds sorted by score.",
+        },
+        {
+          nodeId: "sf4",
+          title: "Step 5 — Enrich Results from Product DB",
+          desc: "Elasticsearch returns IDs and scores but not full product details. The API fetches complete product data from PostgreSQL using SELECT * FROM products WHERE id IN (1,2,...50). Uses Redis cache for each product. Typically 95%+ of top results are hot products already in Redis — enrichment adds <5ms.",
+        },
+        {
+          nodeId: "sf0",
+          title: "Step 6 — Ranked Results Delivered",
+          desc: "API returns a paginated JSON response with 50 products, total count, facets (available filters: brands, price ranges, ratings), and a searchId for analytics. Total latency (Elasticsearch path): 15–40ms. Cache hit path: 5ms. The searchId is logged — click events are tracked to improve future ranking via click-through rate signals.",
+        },
+      ],
+    },
+
+    /* ── Notification Flow ── */
+    {
+      id: "flow-notification",
+      title: "Notification Flow",
+      icon: "🔔",
+      description:
+        "How a single business event triggers multi-channel notifications",
+      nodes: [
+        { id: "nf0", label: "Event Source", icon: "📋" },
+        { id: "nf1", label: "Notification Service", icon: "🔔" },
+        { id: "nf2", label: "Push (FCM/APNs)", icon: "📱" },
+        { id: "nf3", label: "Email (SES)", icon: "📧" },
+        { id: "nf4", label: "SMS (SNS/Twilio)", icon: "📲" },
+      ],
+      steps: [
+        {
+          nodeId: "nf0",
+          title: "Step 1 — Business Event Triggers Notification",
+          desc: "Order Service publishes OrderShipped event to Kafka: { orderId: 'ORD-789', userId: 42, trackingId: 'BD12345', estimatedDelivery: '2026-03-11' }. The event is a fact — it does not decide how to notify the user. That decision belongs to the Notification Service. This separation means adding WhatsApp notifications later requires zero changes to Order Service.",
+        },
+        {
+          nodeId: "nf1",
+          title: "Step 2 — Notification Service Processes Event",
+          desc: "Notification Service consumes the event and looks up the user's preferences: does Priya have push enabled? Is she opted into SMS? What are her quiet hours (11pm–7am)? It fetches her device tokens from the Token Store and determines channels to use. Template engine renders personalised content: 'Your order ORD-789 shipped! Arriving by March 11.'",
+        },
+        {
+          nodeId: "nf2",
+          title: "Step 3 — Push Notification via FCM/APNs",
+          desc: "For Android: Firebase Cloud Messaging (FCM). For iOS: Apple Push Notification service (APNs). Notification Service sends the push payload to FCM which routes it to Priya's device registration token. FCM handles device connectivity — if her phone is offline, FCM queues the push for up to 4 weeks. Delivery rate: ~95% on active devices.",
+        },
+        {
+          nodeId: "nf3",
+          title: "Step 4 — Email via Amazon SES",
+          desc: "HTML email is rendered from a Jinja2/Handlebars template with order details, tracking link, and estimated delivery. Sent via Amazon SES (Simple Email Service). SES manages: SPF/DKIM/DMARC signing (prevents spam classification), bounce handling (hard bounces auto-unsubscribe), complaint tracking. Cost: $0.10 per 1,000 emails. Delivery time: 30 seconds to 2 minutes.",
+        },
+        {
+          nodeId: "nf4",
+          title: "Step 5 — SMS via SNS / Twilio",
+          desc: "SMS is sent only if the user enabled it AND the order value > ₹500 (cost control). Notification Service calls Twilio or AWS SNS Transactional SMS API with a short message (160 chars): 'ShopKart: Order #789 shipped! Track: shopkart.com/track/BD12345'. SMS delivery is ~98% within 15 seconds in India. Twilio provides delivery receipts for each message.",
+        },
+        {
+          nodeId: "nf0",
+          title: "Step 6 — Delivery Tracking & Retry",
+          desc: "Every notification attempt is logged: { channel, userId, status, timestamp, messageId }. Push delivery confirmed by FCM webhook. Email bounces/opens tracked via SES events. Undelivered notifications are retried with exponential backoff (1min, 5min, 30min). After 3 failures on a device token, it is flagged as inactive and cleaned from the Token Store.",
+        },
+      ],
+    },
   ];
 
   /* ─────────────────────────────────────────────────── */

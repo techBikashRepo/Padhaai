@@ -721,6 +721,429 @@
         },
       ],
     },
+
+    /* ── User Login / Authentication ── */
+    {
+      id: "login-flow",
+      name: "User Login / Authentication",
+      icon: "🔐",
+      description:
+        "How credentials become a JWT and secure every subsequent API request",
+      steps: [
+        {
+          icon: "👤",
+          label: "User Submits Credentials",
+          detail:
+            "Browser sends POST /api/auth/login with { email, password } over HTTPS. TLS encrypts the request body — password never travels in plain text.",
+        },
+        {
+          icon: "🚪",
+          label: "API Gateway",
+          detail:
+            "Accepts request, terminates TLS, applies rate limiting (max 5 login attempts/min per IP) to prevent brute-force, then forwards to Auth Service.",
+        },
+        {
+          icon: "🔐",
+          label: "Auth Service Validates",
+          detail:
+            "Queries User DB for stored bcrypt hash, runs bcrypt.compare(inputPassword, hash). bcrypt is intentionally slow (~100ms) to make offline attacks expensive.",
+        },
+        {
+          icon: "🗄️",
+          label: "User DB Check",
+          detail:
+            "Returns user record. Auth Service checks: is account active? email verified? MFA enabled? Failed checks return 401 Unauthorized immediately.",
+        },
+        {
+          icon: "⚡",
+          label: "Tokens Generated & Stored",
+          detail:
+            "Access Token: short-lived JWT (15 min) with userId + roles. Refresh Token: opaque 7-day token stored in Redis with TTL. Redis key: refresh:<userId>.",
+        },
+        {
+          icon: "👤",
+          label: "Tokens Sent to Browser",
+          detail:
+            "JWT returned in response body. Refresh token set as HttpOnly Secure SameSite=Strict cookie — JS can't read it (XSS-safe). Future requests use Authorization: Bearer <JWT>.",
+        },
+      ],
+    },
+
+    /* ── Load Balancer Flow ── */
+    {
+      id: "loadbalancer-flow",
+      name: "Load Balancer Flow",
+      icon: "⚖️",
+      description:
+        "How traffic is distributed, health-checked, and routed across multiple servers",
+      steps: [
+        {
+          icon: "🌐",
+          label: "Traffic Arrives",
+          detail:
+            "DNS resolves to the Load Balancer's IP. All requests from all users hit this single entry point. App servers are in a private subnet — never directly internet-facing.",
+        },
+        {
+          icon: "⚖️",
+          label: "Algorithm Selects Server",
+          detail:
+            "Round Robin cycles A→B→C. Least Connections picks server with fewest active requests. IP Hash ensures same user always hits same server (sticky sessions).",
+        },
+        {
+          icon: "⚙️",
+          label: "Request Forwarded",
+          detail:
+            "Request forwarded to chosen server with X-Forwarded-For header preserving the real client IP. Server processes and returns response via the LB.",
+        },
+        {
+          icon: "⚙️",
+          label: "Health Checks Running",
+          detail:
+            "LB sends GET /health every 30s to each server. Three consecutive failures mark a server unhealthy and remove it from the pool automatically.",
+        },
+        {
+          icon: "⚙️",
+          label: "Server Fails & Recovers",
+          detail:
+            "Unhealthy server stops receiving traffic. Remaining servers absorb load. When health checks pass again, server is automatically re-added to the pool.",
+        },
+        {
+          icon: "⚖️",
+          label: "SSL Termination",
+          detail:
+            "LB decrypts HTTPS at the edge, forwards plain HTTP to private servers. Offloads crypto from app servers. Injects X-Forwarded-Proto: https header.",
+        },
+      ],
+    },
+
+    /* ── CDN Flow ── */
+    {
+      id: "cdn-flow",
+      name: "CDN Flow",
+      icon: "🌍",
+      description:
+        "How static assets travel from origin to edge and get cached globally in 600+ PoPs",
+      steps: [
+        {
+          icon: "👤",
+          label: "Browser Requests Asset",
+          detail:
+            "Browser requests hero-banner.jpg from cdn.shopkart.com. Anycast DNS resolves to nearest CDN PoP (Chennai edge, ~5ms away) — not the origin server.",
+        },
+        {
+          icon: "🌍",
+          label: "Edge Cache Check",
+          detail:
+            "Chennai edge checks its SSD cache. HIT: returns file in ~5ms. MISS: must fetch from origin. First user in each city always triggers a miss; all subsequent users get a hit.",
+        },
+        {
+          icon: "🔀",
+          label: "Edge Fetches from Origin",
+          detail:
+            "On cache miss, edge traverses CDN's private backbone to origin. CDN private networks (AWS backbone, Cloudflare Argo) are faster than public internet.",
+        },
+        {
+          icon: "⚙️",
+          label: "Origin Serves with Cache Headers",
+          detail:
+            "Origin returns file with Cache-Control: public, max-age=31536000 (1 year). Versioned filenames (hero.v3.jpg) make long TTLs safe — filename changes on each deploy.",
+        },
+        {
+          icon: "🪣",
+          label: "Cached at Edge Globally",
+          detail:
+            "Chennai edge caches file for 1 year. Next 10,000 Chennai users get it from edge — origin receives zero requests. CloudFront has 450+ edge locations worldwide.",
+        },
+        {
+          icon: "👤",
+          label: "Instant Response to User",
+          detail:
+            "~5ms from edge vs ~180ms from US origin. CDN cuts page load time by 60–90% for global users. Static assets = 80–95% of page bytes, so CDN impact is massive.",
+        },
+      ],
+    },
+
+    /* ── API Request Flow ── */
+    {
+      id: "api-request-flow",
+      name: "API Request Flow",
+      icon: "🔀",
+      description:
+        "Full lifecycle of a REST API call — from client bytes to JSON response",
+      steps: [
+        {
+          icon: "📱",
+          label: "Client Sends Request",
+          detail:
+            "GET /api/v1/products/12345 with Authorization: Bearer <JWT> and X-Request-ID: uuid-123 for distributed tracing across services.",
+        },
+        {
+          icon: "🚪",
+          label: "API Gateway",
+          detail:
+            "Checks: is route defined? Has caller exceeded rate limit (100 req/min)? Is request within size limit? Returns 429 or 404 before business logic runs if checks fail.",
+        },
+        {
+          icon: "🔐",
+          label: "Auth Middleware",
+          detail:
+            "Verifies JWT signature with public key (no DB call needed). Checks expiry. Returns 401 if invalid, 403 if insufficient permissions for this resource.",
+        },
+        {
+          icon: "⚙️",
+          label: "Business Logic",
+          detail:
+            "Service handler validates productId, applies business rules (region visibility, pricing tiers), and fetches data. Never touches HTTP layer — works with plain objects.",
+        },
+        {
+          icon: "🗄️",
+          label: "Cache → DB Fetch",
+          detail:
+            "GET product:12345 from Redis (<1ms hit). On miss: SELECT from PostgreSQL via index (~2ms). Stores result in Redis (EX 300) for future requests.",
+        },
+        {
+          icon: "📱",
+          label: "Response to Client",
+          detail:
+            "JSON serialized, Content-Type/ETag headers set. Cache hit total: ~15ms. Cache miss + DB: ~30ms. X-Request-ID echoed for support correlation.",
+        },
+      ],
+    },
+
+    /* ── Database Read/Write Flow ── */
+    {
+      id: "database-flow",
+      name: "Database Read / Write Flow",
+      icon: "🗄️",
+      description:
+        "How reads and writes are routed, replicated, and pooled across primary and replicas",
+      steps: [
+        {
+          icon: "⚙️",
+          label: "App Routes Query",
+          detail:
+            "Connection router (PgBouncer / RDS Proxy) sends writes to Primary (INSERT, UPDATE, DELETE) and reads to Read Replicas (SELECT) using DB_WRITE_URL and DB_READ_URL.",
+        },
+        {
+          icon: "🗄️",
+          label: "Write to Primary",
+          detail:
+            "Primary acquires row lock, writes to WAL, commits, returns new ID. ACID guarantees full commit or full rollback. Typical write latency: 2–10ms.",
+        },
+        {
+          icon: "📝",
+          label: "WAL Shipped to Replicas",
+          detail:
+            "PostgreSQL streams binary WAL to all replicas asynchronously. Primary commits BEFORE replicas apply changes. Replication lag: typically 10–100ms in same region.",
+        },
+        {
+          icon: "📋",
+          label: "Read from Replica",
+          detail:
+            "SELECT queries routed to read replicas. Read-only = no lock contention from writes. MVCC ensures readers never block writers on the same replica.",
+        },
+        {
+          icon: "📋",
+          label: "Load Across Replicas",
+          detail:
+            "2 replicas roughly 3× read capacity. 80% of queries go to replicas. If replica lag > 500ms, router temporarily sends reads to Primary to avoid stale data.",
+        },
+        {
+          icon: "⚙️",
+          label: "Connection Pooling",
+          detail:
+            "PgBouncer maintains persistent pools (10 Primary, 20/replica). Requests borrow connections rather than opening new ones. Connection overhead: 0.1ms vs 100ms without pooling.",
+        },
+      ],
+    },
+
+    /* ── Message Queue Flow ── */
+    {
+      id: "msgqueue-flow",
+      name: "Message Queue Flow",
+      icon: "📨",
+      description:
+        "How async messaging decouples services, guarantees delivery, and handles failures",
+      steps: [
+        {
+          icon: "📋",
+          label: "Producer Publishes Event",
+          detail:
+            "Order Service publishes order-confirmed event to Kafka topic after payment. Takes ~1ms. Does NOT wait for email or inventory — returns HTTP 200 to user immediately.",
+        },
+        {
+          icon: "📨",
+          label: "Kafka Stores Durably",
+          detail:
+            "Kafka writes to partition log on disk with replication factor 3. Assigns offset (e.g., 10042). Acknowledges only after all 3 replicas written — no messages lost on broker crash.",
+        },
+        {
+          icon: "📧",
+          label: "Email Worker Consumes",
+          detail:
+            "Consumer group email-group polls Kafka, picks up offset 10042, sends email via SES, then commits offset. SES down? Offset not committed — retried next poll automatically.",
+        },
+        {
+          icon: "📦",
+          label: "Inventory Worker Consumes",
+          detail:
+            "Consumer group inventory-group reads the SAME event independently at the same offset. Each consumer group maintains its own cursor — adding new consumers requires zero producer changes.",
+        },
+        {
+          icon: "💀",
+          label: "Dead Letter Queue",
+          detail:
+            "Message failing 3× processing attempts is moved to DLQ. Normal queue unblocked. CloudWatch alarm fires. Engineers replay from DLQ after fixing the bug.",
+        },
+        {
+          icon: "📋",
+          label: "Temporal Decoupling",
+          detail:
+            "Email Worker down 2 hours? Order Service never knows — keeps publishing. Kafka retains all messages for 7 days. Worker replays all 5,000 accumulated messages on restart.",
+        },
+      ],
+    },
+
+    /* ── File Upload Flow ── */
+    {
+      id: "upload-flow",
+      name: "File Upload Flow",
+      icon: "📁",
+      description:
+        "How files travel securely from browser to cloud storage without passing through the app server",
+      steps: [
+        {
+          icon: "👤",
+          label: "User Selects File",
+          detail:
+            "Browser does NOT upload immediately. First requests a pre-signed URL: POST /api/uploads/presign { filename, contentType, size }. Server validates type and size limits first.",
+        },
+        {
+          icon: "⚙️",
+          label: "Server Generates Pre-Signed URL",
+          detail:
+            "API validates user auth and file size (<10MB). Calls S3 SDK to create a 5-minute signed PUT URL for a random key (uploads/user-42/uuid.jpg). Returns URL to browser.",
+        },
+        {
+          icon: "🔗",
+          label: "Browser Uploads Direct to S3",
+          detail:
+            "Browser PUTs raw bytes directly to the pre-signed S3 URL — bypassing the API server entirely. App server never handles megabyte file bytes, keeping it lean and memory-efficient.",
+        },
+        {
+          icon: "🪣",
+          label: "S3 Stores File",
+          detail:
+            "S3 validates signature & expiry, stores with 11-nines durability across multiple AZs, and fires an ObjectCreated event. File stored with private ACL until processing is complete.",
+        },
+        {
+          icon: "⚡",
+          label: "Lambda Processes File",
+          detail:
+            "S3 event triggers Lambda. Generates 3 resized variants (150px/600px/1200px) via Sharp, strips EXIF metadata, runs content-policy scan, saves all variants to /processed/.",
+        },
+        {
+          icon: "👤",
+          label: "DB Updated, User Notified",
+          detail:
+            "Lambda updates Product DB with CDN URLs for all three variants. Sends SNS → WebSocket notification: 'Your image is live!' Total post-upload processing time: ~3 seconds.",
+        },
+      ],
+    },
+
+    /* ── Search Flow ── */
+    {
+      id: "search-flow",
+      name: "Search Flow",
+      icon: "🔍",
+      description:
+        "How a search query is preprocessed, matched, ranked, and returned in milliseconds",
+      steps: [
+        {
+          icon: "👤",
+          label: "User Types Query",
+          detail:
+            "Browser debounces 300ms after last keystroke, then sends GET /api/search?q=nike+running+shoes&page=1&sort=relevance&filters=brand:Nike.",
+        },
+        {
+          icon: "🔀",
+          label: "Search API Preprocesses",
+          detail:
+            "Normalises query: lowercase, tokenise, remove stop words, expand synonyms ('sneakers' → 'shoes'). Constructs Elasticsearch query with field boosting (title > description).",
+        },
+        {
+          icon: "⚡",
+          label: "Redis Cache Check",
+          detail:
+            "Popular queries (>100/hr) cached in Redis. GET search:<query-hash>. Cache hit returns 50 result IDs in ~0.5ms. Reduces Elasticsearch load ~40% during peak hours.",
+        },
+        {
+          icon: "🔍",
+          label: "Elasticsearch Full-Text Search",
+          detail:
+            "Inverted index searches 10M documents in <10ms. BM25 relevance scoring applied. Filters (brand:Nike, in-stock:true) shrink results. Returns top-50 productIds by score.",
+        },
+        {
+          icon: "🗄️",
+          label: "Enrich from Product DB",
+          detail:
+            "Elasticsearch returns IDs only. API fetches full product data via SELECT WHERE id IN (...). 95%+ of hot results already in Redis — enrichment adds <5ms.",
+        },
+        {
+          icon: "👤",
+          label: "Ranked Results Delivered",
+          detail:
+            "Returns 50 products + facets (brands, price ranges, ratings) + searchId for analytics. Elasticsearch path: 15–40ms total. Cache hit path: 5ms.",
+        },
+      ],
+    },
+
+    /* ── Notification Flow ── */
+    {
+      id: "notification-flow",
+      name: "Notification Flow",
+      icon: "🔔",
+      description:
+        "How a single business event triggers personalised push, email, and SMS notifications",
+      steps: [
+        {
+          icon: "📋",
+          label: "Event Published",
+          detail:
+            "Order Service publishes OrderShipped event to Kafka: { orderId, userId, trackingId, estimatedDelivery }. Notification concerns completely separated from business logic.",
+        },
+        {
+          icon: "🔔",
+          label: "Notification Service Decides",
+          detail:
+            "Consumes event. Looks up user preferences (push enabled? SMS opted-in? quiet hours 11pm–7am?). Fetches device tokens. Renders personalised template for each channel.",
+        },
+        {
+          icon: "📱",
+          label: "Push via FCM / APNs",
+          detail:
+            "Android: Firebase Cloud Messaging. iOS: Apple Push Notification Service. FCM queues push for offline devices up to 4 weeks. Active device delivery rate: ~95%.",
+        },
+        {
+          icon: "📧",
+          label: "Email via Amazon SES",
+          detail:
+            "HTML email rendered from template. SES handles SPF/DKIM/DMARC signing, bounce handling, complaint tracking. Cost: $0.10/1,000 emails. Delivery: 30s–2min.",
+        },
+        {
+          icon: "📲",
+          label: "SMS via SNS / Twilio",
+          detail:
+            "Sent only if user opted-in AND order value > ₹500 (cost control). 160-char message with tracking link. ~98% delivery within 15 seconds. Twilio provides delivery receipts.",
+        },
+        {
+          icon: "📋",
+          label: "Delivery Tracking & Retry",
+          detail:
+            "Every attempt logged. Undelivered notifications retried with exponential backoff (1min → 5min → 30min). After 3 push failures, device token flagged inactive and cleaned from store.",
+        },
+      ],
+    },
   ];
 
   const PATTERNS = [
@@ -2090,18 +2513,20 @@
             )
             .join("")}
         </div>
-        <div class="flow-detail-panel">
-          <div class="flow-detail-step">Step ${_flowStep + 1} / ${steps.length}</div>
-          <div class="flow-detail-title">${steps[_flowStep].icon} ${esc(steps[_flowStep].label)}</div>
-          <div class="flow-detail-text">${esc(steps[_flowStep].detail)}</div>
+        <div class="flow-info-col">
+          <div class="flow-detail-panel">
+            <div class="flow-detail-step">Step ${_flowStep + 1} / ${steps.length}</div>
+            <div class="flow-detail-title">${steps[_flowStep].icon} ${esc(steps[_flowStep].label)}</div>
+            <div class="flow-detail-text">${esc(steps[_flowStep].detail)}</div>
+          </div>
+          <div class="flow-controls">
+            <button class="labs-btn labs-btn-secondary" id="flowPrev" ${_flowStep === 0 ? "disabled" : ""}>← Prev</button>
+            <div class="flow-progress-dots">
+              ${steps.map((_, i) => `<div class="flow-dot${i === _flowStep ? " active" : i < _flowStep ? " done" : ""}"></div>`).join("")}
+            </div>
+            <button class="labs-btn labs-btn-primary" id="flowNext" ${_flowStep === steps.length - 1 ? "disabled" : ""}>Next Step →</button>
+          </div>
         </div>
-      </div>
-      <div class="flow-controls">
-        <button class="labs-btn labs-btn-secondary" id="flowPrev" ${_flowStep === 0 ? "disabled" : ""}>← Prev</button>
-        <div class="flow-progress-dots">
-          ${steps.map((_, i) => `<div class="flow-dot${i === _flowStep ? " active" : i < _flowStep ? " done" : ""}"></div>`).join("")}
-        </div>
-        <button class="labs-btn labs-btn-primary" id="flowNext" ${_flowStep === steps.length - 1 ? "disabled" : ""}>Next Step →</button>
       </div>`;
 
     document.getElementById("flowPrev").addEventListener("click", () => {

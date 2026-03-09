@@ -215,20 +215,20 @@
   align-items: center;
   gap: 8px;
   padding: 7px 10px;
-  background: var(--bg-elevated, #1e2133);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 8px;
   cursor: grab;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   transition:
     border-color 0.15s,
-    color 0.15s;
+    background 0.15s;
   user-select: none;
 }
 .sim-comp:hover {
   border-color: var(--accent);
-  color: var(--text-primary);
+  background: var(--bg-card);
 }
 .sim-comp:active {
   cursor: grabbing;
@@ -378,11 +378,14 @@
   overflow-y: auto;
 }
 .sim-eval-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sim-eval-empty {
   font-size: 12px;
@@ -698,17 +701,19 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: var(--bg-card);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
-  color: var(--text-secondary);
-  transition: border-color 0.15s;
+  color: var(--text-primary);
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 .dec-option:hover {
   border-color: var(--accent);
-  color: var(--text-primary);
+  background: var(--bg-card);
 }
 .dec-option-letter {
   display: flex;
@@ -717,7 +722,9 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--bg-elevated, #252840);
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  color: var(--accent);
   font-size: 11px;
   font-weight: 700;
   flex-shrink: 0;
@@ -822,6 +829,13 @@
   gap: 24px;
   align-items: start;
 }
+.flow-info-col {
+  position: sticky;
+  top: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .flow-diagram {
   display: flex;
   flex-direction: column;
@@ -868,31 +882,39 @@
   color: var(--accent);
 }
 .flow-detail-panel {
-  background: var(--bg-elevated, #1e2133);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
   border-radius: 12px;
-  padding: 18px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
 }
 .flow-detail-step {
   font-size: 11px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
 }
 .flow-detail-title {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  line-height: 1.4;
 }
 .flow-detail-text {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  line-height: 1.75;
+  opacity: 0.85;
 }
 .flow-controls {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 20px;
+  margin-top: 0;
 }
 .flow-progress-dots {
   display: flex;
@@ -917,6 +939,9 @@
 @media (max-width: 700px) {
   .flow-steps-container {
     grid-template-columns: 1fr;
+  }
+  .flow-info-col {
+    position: static;
   }
 }
 
@@ -977,10 +1002,11 @@
 }
 .comp-node {
   padding: 6px 12px;
-  background: var(--bg-elevated, #1e2133);
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-bottom: 0;
 }
 .comp-flow-arrow {
@@ -1150,7 +1176,7 @@
 }
 .calc-field input {
   padding: 8px 12px;
-  background: var(--bg-elevated, #1e2133);
+  background: var(--bg-primary);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text-primary);
@@ -1161,6 +1187,7 @@
 }
 .calc-field input:focus {
   border-color: var(--accent);
+  background: var(--bg-card);
 }
 .calc-results-grid {
   display: grid;
@@ -1245,8 +1272,8 @@
   border-radius: 8px;
   border: 1px solid var(--border);
   font-size: 13px;
-  color: var(--text-secondary);
-  background: var(--bg-elevated, #1e2133);
+  color: var(--text-primary);
+  background: var(--bg-primary);
   transition: all 0.3s;
 }
 .fail-sys-node.fail-sys-failed {
