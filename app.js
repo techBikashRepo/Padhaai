@@ -543,6 +543,30 @@
     });
   }
 
+  /* ─── Company Tenure ────────────────────────────── */
+  function updateTenure() {
+    const el = document.getElementById("topbarTenure");
+    if (!el) return;
+    const join = new Date(2025, 5, 19); // 19 Jun 2025
+    const now = new Date();
+    let years = now.getFullYear() - join.getFullYear();
+    let months = now.getMonth() - join.getMonth();
+    let days = now.getDate() - join.getDate();
+    if (days < 0) {
+      months--;
+      days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    const parts = [];
+    if (years > 0) parts.push(`${years} yr${years !== 1 ? "s" : ""}`);
+    if (months > 0) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
+    parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+    el.innerHTML = `🏢 <span class="tenure-date">19 Jun 2025</span>&nbsp;·&nbsp;<span class="tenure-duration">${parts.join(" ")}</span>`;
+  }
+
   /* ─── Bootstrap ──────────────────────────────────── */
   function init() {
     // Apply saved theme
@@ -550,6 +574,9 @@
 
     // Wire all events
     wireEvents();
+
+    // Render company tenure badge
+    updateTenure();
 
     // Build sidebar
     buildSidebar();
