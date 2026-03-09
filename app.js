@@ -166,15 +166,28 @@
     PARTS.forEach((part) => {
       const done = part.topics.filter((t) => completed[t.id]).length;
       const pct = Math.round((done / part.topics.length) * 100);
+      const bestScore = window.ArchQuiz
+        ? window.ArchQuiz.getBestScore(part.id)
+        : null;
+      const scoreBadge =
+        bestScore !== null
+          ? `<span class="part-quiz-score">${bestScore}%</span>`
+          : "";
       const card = el("div", "part-card");
       card.innerHTML = `
         <div class="part-card-icon">${part.icon}</div>
         <div class="part-card-num">${part.title}</div>
         <div class="part-card-title">${part.name}</div>
         <div class="part-card-count">${part.topics.length} topics · ${done} completed</div>
-        <div class="part-card-bar"><div class="part-card-bar-fill" style="width:${pct}%"></div></div>`;
+        <div class="part-card-bar"><div class="part-card-bar-fill" style="width:${pct}%"></div></div>
+        <button class="part-quiz-btn" data-pid="${part.id}">🧠 Take Quiz ${scoreBadge}</button>`;
       card.addEventListener("click", () => {
         navigateTo(part.topics[0].id);
+      });
+      const quizBtn = card.querySelector(".part-quiz-btn");
+      quizBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (window.ArchQuiz) ArchQuiz.start(part.id);
       });
       grid.appendChild(card);
     });

@@ -452,6 +452,7 @@ window.ArchTour = (function () {
   <button class="help-nav-item" data-sec="quickstart">🚀 Quick Start</button>
   <button class="help-nav-item" data-sec="navigation">📚 Navigation</button>
   <button class="help-nav-item" data-sec="topics">📖 Topic View</button>
+  <button class="help-nav-item" data-sec="quiz">🧠 Quiz</button>
   <button class="help-nav-item" data-sec="diagrams">🗂️ Diagrams</button>
   <button class="help-nav-item" data-sec="labs">⚗️ Labs</button>
   <button class="help-nav-item" data-sec="search">🔍 Search</button>
@@ -472,8 +473,9 @@ window.ArchTour = (function () {
     <div class="help-step"><div class="help-step-num">1</div><div class="help-step-text"><strong>Pick a module</strong> — Scroll the Welcome screen and click any of the 12 module cards, or expand a part in the left sidebar.</div></div>
     <div class="help-step"><div class="help-step-num">2</div><div class="help-step-text"><strong>Read a topic</strong> — Click a topic name. Each topic has expandable section cards. Click any card header to expand its content.</div></div>
     <div class="help-step"><div class="help-step-num">3</div><div class="help-step-text"><strong>Mark it done</strong> — Hit the <strong>✓ Mark Complete</strong> button at the bottom of the topic. Watch your progress bar grow!</div></div>
-    <div class="help-step"><div class="help-step-num">4</div><div class="help-step-text"><strong>Explore diagrams</strong> — Click the 🗂️ button in the top bar to see animated architecture flows and company designs.</div></div>
-    <div class="help-step"><div class="help-step-num">5</div><div class="help-step-text"><strong>Try the labs</strong> — Click ⚗️ for hands-on interactive simulators and case studies.</div></div>
+    <div class="help-step"><div class="help-step-num">4</div><div class="help-step-text"><strong>Test yourself</strong> — Click the <strong>🧠 Take Quiz</strong> button on any module card to answer 8 questions on that part. Your best score is saved!</div></div>
+    <div class="help-step"><div class="help-step-num">5</div><div class="help-step-text"><strong>Explore diagrams</strong> — Click the 🗂️ button in the top bar to see animated architecture flows and company designs.</div></div>
+    <div class="help-step"><div class="help-step-num">6</div><div class="help-step-text"><strong>Try the labs</strong> — Click ⚗️ for hands-on interactive simulators and case studies.</div></div>
   </div>
 
   <div class="help-callout info">
@@ -489,17 +491,17 @@ window.ArchTour = (function () {
     <table class="help-parts-table">
       <tr><th>#</th><th>Module</th><th>What you'll learn</th></tr>
       <tr><td><span class="part-emoji">🌐</span></td><td><strong>Part 1</strong></td><td>Networking Fundamentals</td></tr>
-      <tr><td><span class="part-emoji">🏗️</span></td><td><strong>Part 2</strong></td><td>System Design Basics</td></tr>
-      <tr><td><span class="part-emoji">💾</span></td><td><strong>Part 3</strong></td><td>Databases &amp; Storage</td></tr>
-      <tr><td><span class="part-emoji">⚡</span></td><td><strong>Part 4</strong></td><td>Caching &amp; Performance</td></tr>
-      <tr><td><span class="part-emoji">📨</span></td><td><strong>Part 5</strong></td><td>Message Queues &amp; Streaming</td></tr>
-      <tr><td><span class="part-emoji">🔒</span></td><td><strong>Part 6</strong></td><td>Security &amp; Authentication</td></tr>
-      <tr><td><span class="part-emoji">☁️</span></td><td><strong>Part 7</strong></td><td>Cloud &amp; Microservices</td></tr>
-      <tr><td><span class="part-emoji">🌍</span></td><td><strong>Part 8</strong></td><td>CDN &amp; Distributed Systems</td></tr>
-      <tr><td><span class="part-emoji">📡</span></td><td><strong>Part 9</strong></td><td>APIs &amp; Communication</td></tr>
-      <tr><td><span class="part-emoji">🔄</span></td><td><strong>Part 10</strong></td><td>Availability &amp; Reliability</td></tr>
-      <tr><td><span class="part-emoji">📈</span></td><td><strong>Part 11</strong></td><td>Monitoring &amp; Observability</td></tr>
-      <tr><td><span class="part-emoji">🏆</span></td><td><strong>Part 12</strong></td><td>Real-World Case Studies</td></tr>
+      <tr><td><span class="part-emoji">🔌</span></td><td><strong>Part 2</strong></td><td>Backend APIs</td></tr>
+      <tr><td><span class="part-emoji">🔐</span></td><td><strong>Part 3</strong></td><td>Security &amp; Auth</td></tr>
+      <tr><td><span class="part-emoji">🗄️</span></td><td><strong>Part 4</strong></td><td>Databases &amp; SQL</td></tr>
+      <tr><td><span class="part-emoji">🏛️</span></td><td><strong>Part 5</strong></td><td>Architecture Patterns</td></tr>
+      <tr><td><span class="part-emoji">📈</span></td><td><strong>Part 6</strong></td><td>Scalability</td></tr>
+      <tr><td><span class="part-emoji">⚡</span></td><td><strong>Part 7</strong></td><td>Caching</td></tr>
+      <tr><td><span class="part-emoji">📨</span></td><td><strong>Part 8</strong></td><td>Async &amp; Distributed Patterns</td></tr>
+      <tr><td><span class="part-emoji">☁️</span></td><td><strong>Part 9</strong></td><td>Cloud &amp; AWS</td></tr>
+      <tr><td><span class="part-emoji">🐳</span></td><td><strong>Part 10</strong></td><td>Containers &amp; Docker</td></tr>
+      <tr><td><span class="part-emoji">🔧</span></td><td><strong>Part 11</strong></td><td>Production Engineering</td></tr>
+      <tr><td><span class="part-emoji">🎯</span></td><td><strong>Part 12</strong></td><td>Career Readiness</td></tr>
     </table>
   </div>
 </div>
@@ -630,7 +632,80 @@ window.ArchTour = (function () {
 </div>
 
 <!-- ══════════════════════════════════════
-     SECTION 4 — Architecture Diagrams
+     SECTION 4 — Quiz
+══════════════════════════════════════ -->
+<div class="help-section" id="help-sec-quiz">
+  <div class="help-section-title"><span>🧠</span> Part Quizzes</div>
+  <p class="help-section-sub">Test your understanding after finishing each module with 8 targeted questions.</p>
+
+  <div class="help-feature-row">
+    <div class="help-feature-row-icon">🧠</div>
+    <div class="help-feature-row-body">
+      <h3>How to Take a Quiz</h3>
+      <p>On the Welcome screen, scroll to any module card and click the <strong>🧠 Take Quiz</strong> button at the bottom of the card. A modal quiz opens — no page navigation needed.</p>
+    </div>
+  </div>
+
+  <div class="help-mockup">
+    <div class="help-mockup-label">Quiz Modal Preview</div>
+    <div style="padding:16px 20px;background:var(--bg-card);border-radius:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px">
+        <div style="font-size:11px;color:var(--text-muted);background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px">✕ Close</div>
+        <div style="font-size:13px;font-weight:600;color:var(--text-primary)">⚡ Caching — Quiz</div>
+        <div style="font-size:11px;color:var(--text-muted)">3 / 8</div>
+      </div>
+      <div style="height:3px;background:var(--bg-tertiary);border-radius:2px;margin-bottom:16px">
+        <div style="width:25%;height:100%;background:var(--text-accent);border-radius:2px"></div>
+      </div>
+      <div style="font-size:10px;font-weight:700;color:var(--text-accent);letter-spacing:.06em;margin-bottom:6px">QUESTION 3</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:14px">What is a cache stampede (thundering herd)?</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-primary)">A. A DDoS attack on the cache server</div>
+        <div style="padding:9px 12px;border:1.5px solid #22c55e;border-radius:8px;font-size:12px;color:#22c55e;font-weight:600">B. When a popular cached item expires and many requests hit the DB at once ✓</div>
+        <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-primary)">C. Cache memory fills up and items are evicted</div>
+        <div style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-primary)">D. Cache cluster loses all nodes simultaneously</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="help-tips-grid">
+    <div class="help-tip-card"><div class="help-tip-icon">📝</div><div class="help-tip-text"><strong>8 Questions per Part</strong>Each of the 12 modules has its own set of 8 targeted questions covering the core concepts of that module.</div></div>
+    <div class="help-tip-card"><div class="help-tip-icon">🔀</div><div class="help-tip-text"><strong>Shuffled Every Time</strong>Questions are randomly ordered each run, so the quiz feels different even if you retake it immediately.</div></div>
+    <div class="help-tip-card"><div class="help-tip-icon">💡</div><div class="help-tip-text"><strong>Instant Explanations</strong>After every answer — right or wrong — a detailed explanation appears so you learn from every question.</div></div>
+    <div class="help-tip-card"><div class="help-tip-icon">🏆</div><div class="help-tip-text"><strong>Best Score Saved</strong>Your best score per part is saved in the browser. It shows as a green badge on the module card on the Welcome screen.</div></div>
+    <div class="help-tip-card"><div class="help-tip-icon">↺</div><div class="help-tip-text"><strong>Retake Anytime</strong>After seeing your results, click <em>Retry Quiz</em> to try again. Great for spaced-repetition practice before interviews.</div></div>
+    <div class="help-tip-card"><div class="help-tip-icon">🎯</div><div class="help-tip-text"><strong>Graded Results</strong>Get a percentage score with a grade: 🏆 Excellent (88%+), 👍 Good (63%+), 📚 Keep Studying (38%+), 🔄 Try Again (&lt;38%).</div></div>
+  </div>
+
+  <div class="help-callout tip">
+    <div class="help-callout-icon">✅</div>
+    <p><strong>Recommended Flow:</strong> Read all topics in a module → Mark them complete → Then take the quiz. This mimics spaced recall and is proven to strengthen long-term retention significantly more than re-reading.</p>
+  </div>
+
+  <div class="help-divider"></div>
+
+  <div class="help-feature-block">
+    <div class="help-feature-label">📋 Quiz Coverage — All 12 Parts</div>
+    <table class="help-parts-table">
+      <tr><th>Part</th><th>Module</th><th>Quiz Topics</th></tr>
+      <tr><td>🌐 1</td><td>Networking Fundamentals</td><td>DNS, OSI layers, TCP/UDP, Load Balancers, CDN, HTTPS</td></tr>
+      <tr><td>🔌 2</td><td>Backend APIs</td><td>REST, HTTP methods, GraphQL, API Gateway, versioning, rate limiting</td></tr>
+      <tr><td>🔐 3</td><td>Security &amp; Auth</td><td>Auth vs AuthZ, JWT, SQL injection, bcrypt, OAuth 2.0, CSRF, CORS</td></tr>
+      <tr><td>🗄️ 4</td><td>Databases &amp; SQL</td><td>ACID, indexes, sharding, SQL vs NoSQL, eventual consistency, N+1</td></tr>
+      <tr><td>🏛️ 5</td><td>Architecture Patterns</td><td>Microservices, CQRS, Circuit Breaker, Saga, Event Sourcing, Sidecar</td></tr>
+      <tr><td>📈 6</td><td>Scalability</td><td>Horizontal vs Vertical, CAP theorem, consistent hashing, auto-scaling</td></tr>
+      <tr><td>⚡ 7</td><td>Caching</td><td>Cache hit/miss, TTL, LRU, cache stampede, write-through, Redis</td></tr>
+      <tr><td>📨 8</td><td>Async &amp; Distributed</td><td>Sync vs Async, message queues, Kafka, DLQ, pub/sub, idempotency</td></tr>
+      <tr><td>☁️ 9</td><td>Cloud &amp; AWS</td><td>IaaS/PaaS/SaaS, AZs, Lambda, S3, RDS, CloudFront, VPC, shared responsibility</td></tr>
+      <tr><td>🐳 10</td><td>Containers &amp; Docker</td><td>Image vs container, containerization, Kubernetes, Pods, Dockerfile, Compose</td></tr>
+      <tr><td>🔧 11</td><td>Production Engineering</td><td>Observability, SLA/SLO/SLI, blue-green, tracing, canary, error budget</td></tr>
+      <tr><td>🎯 12</td><td>Career Readiness</td><td>Requirements gathering, estimation, NFRs, STAR method, trade-offs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 5 — Architecture Diagrams
 ══════════════════════════════════════ -->
 <div class="help-section" id="help-sec-diagrams">
   <div class="help-section-title"><span>🗂️</span> Architecture Diagrams</div>
