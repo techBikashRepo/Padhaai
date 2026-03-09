@@ -308,6 +308,7 @@
     state.currentTopicId = topicId;
     $("diagramsScreen").classList.add("hidden");
     $("labsScreen").classList.add("hidden");
+    $("helpScreen").classList.add("hidden");
     if (window.DiagramEngine) DiagramEngine.cleanup();
     if (window.ArchLabs) ArchLabs.cleanup();
 
@@ -329,6 +330,7 @@
     state.currentTopicId = null;
     $("diagramsScreen").classList.add("hidden");
     $("labsScreen").classList.add("hidden");
+    $("helpScreen").classList.add("hidden");
     if (window.DiagramEngine) DiagramEngine.cleanup();
     if (window.ArchLabs) ArchLabs.cleanup();
     $("topicContent").classList.add("hidden");
@@ -348,6 +350,7 @@
     $("topicContent").classList.add("hidden");
     $("welcomeScreen").classList.add("hidden");
     $("labsScreen").classList.add("hidden");
+    $("helpScreen").classList.add("hidden");
     $("diagramsScreen").classList.remove("hidden");
     $("topbarCrumb").innerHTML = "<span>🗂️ Architecture Diagrams</span>";
     if (window.DiagramEngine) DiagramEngine.show(tab || "animated");
@@ -363,11 +366,28 @@
     $("topicContent").classList.add("hidden");
     $("welcomeScreen").classList.add("hidden");
     $("diagramsScreen").classList.add("hidden");
+    $("helpScreen").classList.add("hidden");
     $("labsScreen").classList.remove("hidden");
     $("topbarCrumb").innerHTML = "<span>⚗️ Architecture Labs</span>";
     if (window.ArchLabs) ArchLabs.show(tab || "simulator", $("labsScreen"));
     window.scrollTo({ top: 0, behavior: "smooth" });
     window.location.hash = "labs";
+  }
+
+  /* ─── Show help screen ──────────────────────────── */
+  function showHelp() {
+    if (window.DiagramEngine) DiagramEngine.cleanup();
+    if (window.ArchLabs) ArchLabs.cleanup();
+    state.currentTopicId = null;
+    $("topicContent").classList.add("hidden");
+    $("welcomeScreen").classList.add("hidden");
+    $("diagramsScreen").classList.add("hidden");
+    $("labsScreen").classList.add("hidden");
+    $("helpScreen").classList.remove("hidden");
+    $("topbarCrumb").innerHTML = "<span>❓ Help &amp; User Guide</span>";
+    if (window.ArchTour) ArchTour.renderHelp($("helpScreen"));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.location.hash = "help";
   }
 
   /* ─── Search ─────────────────────────────────────── */
@@ -477,6 +497,8 @@
     $("diagramsBtn").addEventListener("click", () => showDiagrams());
     // Labs button
     $("labsBtn").addEventListener("click", () => showLabs());
+    // Help button
+    $("helpBtn").addEventListener("click", () => showHelp());
     // Keyboard shortcut: / to focus search
     document.addEventListener("keydown", (e) => {
       if (e.key === "/" && !e.ctrlKey && !e.metaKey) {
@@ -503,6 +525,8 @@
         showDiagrams();
       } else if (hash === "labs") {
         showLabs();
+      } else if (hash === "help") {
+        showHelp();
       } else if (hash && allTopics.find((t) => t.id === hash)) {
         navigateTo(hash);
       } else if (!hash) {
@@ -528,10 +552,22 @@
 
     // Check URL hash for deep link
     const hash = window.location.hash.replace("#", "");
-    if (hash && allTopics.find((t) => t.id === hash)) {
+    if (hash === "diagrams") {
+      showDiagrams();
+    } else if (hash === "labs") {
+      showLabs();
+    } else if (hash === "help") {
+      showHelp();
+    } else if (hash && allTopics.find((t) => t.id === hash)) {
       navigateTo(hash);
     } else {
       showWelcome();
+      // Auto-start guided tour on first visit
+      if (!localStorage.getItem("aa-tour-done")) {
+        setTimeout(() => {
+          if (window.ArchTour) ArchTour.start();
+        }, 900);
+      }
     }
   }
 

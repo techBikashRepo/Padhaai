@@ -15,6 +15,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="labs.css" />
+    <link rel="stylesheet" href="tour.css" />
   </head>
   <body>
     <!-- ===== OVERLAY (mobile sidebar) ===== -->
@@ -88,6 +89,13 @@
           <span>Welcome to Architect Academy</span>
         </div>
         <div class="topbar-actions">
+          <button
+            class="btn-icon btn-help"
+            id="helpBtn"
+            title="Help &amp; User Guide"
+          >
+            ❓
+          </button>
           <button
             class="btn-icon btn-labs"
             id="labsBtn"
@@ -173,6 +181,9 @@
 
         <!-- Labs Screen -->
         <div class="labs-screen hidden" id="labsScreen"></div>
+
+        <!-- Help / Manual Screen -->
+        <div class="help-screen hidden" id="helpScreen"></div>
       </div>
     </main>
 
@@ -194,6 +205,7 @@
     <script src="svg-diagrams.js"></script>
     <script src="diagrams.js"></script>
     <script src="labs.js"></script>
+    <script src="tour.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
