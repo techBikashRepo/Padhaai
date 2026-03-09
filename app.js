@@ -212,6 +212,7 @@
         <div class="nav-hint">
           ${prevT ? `← <span style="color:var(--text-accent);cursor:pointer" id="prevHint">${prevT.title}</span>` : '<span style="color:var(--text-muted)">Beginning</span>'}
         </div>
+        <button class="btn-go-top" id="btnGoTop">↑ Go to Top</button>
         <div class="nav-hint">
           ${nextT ? `<span style="color:var(--text-accent);cursor:pointer" id="nextHint">${nextT.title}</span> →` : '<span style="color:var(--text-muted)">End of module</span>'}
         </div>
@@ -296,6 +297,13 @@
       const nh = document.getElementById("nextHint");
       if (nh) nh.addEventListener("click", () => navigateTo(nextT.id));
     }
+
+    // Go to top button
+    const goTopBtn = document.getElementById("btnGoTop");
+    if (goTopBtn)
+      goTopBtn.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
