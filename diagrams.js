@@ -307,6 +307,401 @@
         { from: "mq1", to: "mq4" },
       ],
     },
+
+    /* ── Monolithic Architecture ───────────────────── */
+    {
+      id: "idia-monolith",
+      title: "Monolithic Architecture",
+      icon: "🧱",
+      description:
+        "Click each layer to understand how a monolith is structured",
+      layout: "linear",
+      nodes: [
+        {
+          id: "mo0",
+          label: "Client Browser / App",
+          icon: "👤",
+          info: {
+            title: "Client Browser / Mobile App",
+            body: "Every request originates here — a browser GET, a mobile API call. In a monolith, there is one single URL/domain. All features — login, products, orders, payments — live under the same server. This simplifies CORS, auth cookies, and deployments. There is no API Gateway needed; the monolith routes everything internally.",
+          },
+        },
+        {
+          id: "mo1",
+          label: "Presentation Layer",
+          icon: "🖥️",
+          info: {
+            title: "Presentation Layer — Routes & Controllers",
+            body: "All HTTP route handlers and controllers live here. In a Spring Boot or Django monolith, every route /api/products, /api/orders, /login is defined in the same codebase. Requests flow in, are validated, then handed to the service layer. Server-side templating (JSP, Jinja2) or JSON serialisation for a SPA both happen here.",
+          },
+        },
+        {
+          id: "mo2",
+          label: "Business Logic Layer",
+          icon: "⚙️",
+          info: {
+            title: "Business Logic Layer — Services & Domain Logic",
+            body: "All business rules live in one process: UserService, OrderService, ProductService, PaymentService are all loaded in the same JVM / Python process. They can call each other directly as function calls — no HTTP overhead, no serialisation, no network latency. This is the monolith's biggest performance advantage: in-process calls are nanoseconds, not milliseconds.",
+          },
+        },
+        {
+          id: "mo3",
+          label: "Data Access Layer",
+          icon: "📂",
+          info: {
+            title: "Data Access Layer — Repositories & ORM",
+            body: "All database access is centralised. Every service uses the same connection pool to the same database. Hibernate, SQLAlchemy, or ActiveRecord ORM maps objects to tables. Transactions can span multiple domain objects easily — e.g., decrementing inventory AND creating an order in one ACID transaction. This is extremely hard to replicate in microservices without distributed transactions.",
+          },
+        },
+        {
+          id: "mo4",
+          label: "Single Database",
+          icon: "🗄️",
+          info: {
+            title: "Single Shared Database — PostgreSQL / MySQL",
+            body: "One database holds all data: users, products, orders, payments. This gives you free JOINs across any tables, global ACID transactions, and a single source of truth. The downside: every team writes to the same schema. A bad migration can take down the entire app. At scale (100M+ users), a single DB becomes a bottleneck — this is typically when teams start splitting into microservices.",
+          },
+        },
+      ],
+      connections: [
+        { from: "mo0", to: "mo1" },
+        { from: "mo1", to: "mo2" },
+        { from: "mo2", to: "mo3" },
+        { from: "mo3", to: "mo4" },
+      ],
+    },
+
+    /* ── Event-Driven Architecture ─────────────────── */
+    {
+      id: "idia-eventdriven",
+      title: "Event-Driven Architecture",
+      icon: "⚡",
+      description:
+        "Click any component to understand event flow and decoupling",
+      layout: "tree",
+      nodes: [
+        {
+          id: "ev0",
+          label: "Event Producer",
+          icon: "📤",
+          x: 50,
+          y: 0,
+          info: {
+            title: "Event Producer — Order Service",
+            body: "The Order Service completes its local work (writes order to DB, charges payment) and then publishes an OrderPlaced event. It does NOT know — or care — who listens. This is the core of EDA: producers are fully decoupled from consumers. Adding a new consumer (e.g., a fraud detection service) requires zero changes to the producer.",
+          },
+        },
+        {
+          id: "ev1",
+          label: "Event Broker",
+          icon: "🔀",
+          x: 50,
+          y: 1,
+          info: {
+            title: "Event Broker — Kafka / AWS EventBridge",
+            body: "The broker receives events and durably stores them in a topic/stream. It fans out copies to every subscriber. Kafka retains events for days — consumers can replay history, rebuild their state, or catch up after downtime. This persistence is what makes EDA resilient: a consumer crashing does NOT lose events. They wait in the broker.",
+          },
+        },
+        {
+          id: "ev2",
+          label: "Fulfillment Handler",
+          icon: "📦",
+          x: 10,
+          y: 2,
+          info: {
+            title: "Consumer — Fulfillment Service",
+            body: "Reacts to OrderPlaced by reserving inventory, assigning a warehouse pick list, and scheduling dispatch. Completely independent of other consumers. If this service is slow, it does not slow down email sending — each consumer processes at its own pace with its own offset/position in the event stream.",
+          },
+        },
+        {
+          id: "ev3",
+          label: "Notification Handler",
+          icon: "📧",
+          x: 37,
+          y: 2,
+          info: {
+            title: "Consumer — Notification Service",
+            body: "Sends order confirmation email and SMS. Subscribes to the same OrderPlaced event using a different consumer group. Consumer groups are how multiple independent services can read the same stream without competing — Kafka tracks each group's position separately.",
+          },
+        },
+        {
+          id: "ev4",
+          label: "Analytics Handler",
+          icon: "📊",
+          x: 63,
+          y: 2,
+          info: {
+            title: "Consumer — Analytics Service",
+            body: "Aggregates order events for dashboards: revenue per minute, conversion rates, top products. Can replay the full event history to backfill data. Because events are immutable facts, you can derive any read model from them — this is the basis of Event Sourcing, where the event log IS the database.",
+          },
+        },
+        {
+          id: "ev5",
+          label: "Audit Log Handler",
+          icon: "📋",
+          x: 90,
+          y: 2,
+          info: {
+            title: "Consumer — Audit Log Service",
+            body: "Records every business event to an immutable audit trail for compliance (GDPR, PCI-DSS, SOX). Since events are already immutable and timestamped in Kafka, this consumer simply writes them to a cold-storage audit database. Zero extra instrumentation needed in the producer code.",
+          },
+        },
+      ],
+      connections: [
+        { from: "ev0", to: "ev1" },
+        { from: "ev1", to: "ev2" },
+        { from: "ev1", to: "ev3" },
+        { from: "ev1", to: "ev4" },
+        { from: "ev1", to: "ev5" },
+      ],
+    },
+
+    /* ── Serverless Architecture ───────────────────── */
+    {
+      id: "idia-serverless",
+      title: "Serverless Architecture",
+      icon: "☁️",
+      description: "Click any component to understand the serverless model",
+      layout: "tree",
+      nodes: [
+        {
+          id: "sl0",
+          label: "Client App",
+          icon: "👤",
+          x: 50,
+          y: 0,
+          info: {
+            title: "Client — Browser / Mobile App",
+            body: "The client calls your REST or GraphQL API exactly as before. From the client's perspective, serverless is completely invisible — it sees HTTP requests and responses. The difference is entirely on the infrastructure side: there are no long-running servers waiting for requests.",
+          },
+        },
+        {
+          id: "sl1",
+          label: "API Gateway",
+          icon: "🚪",
+          x: 50,
+          y: 1,
+          info: {
+            title: "API Gateway — AWS API Gateway / Cloudflare Workers",
+            body: "The API Gateway receives all HTTP requests and routes each path/method to the correct Lambda function. It handles SSL termination, CORS headers, authentication (Cognito/JWT), rate limiting, and request/response transformation — all without you managing a server. Cost: ~$3.50 per million API calls.",
+          },
+        },
+        {
+          id: "sl2",
+          label: "Auth Function",
+          icon: "🔐",
+          x: 10,
+          y: 2,
+          info: {
+            title: "Lambda — Auth Function",
+            body: "Handles login, token validation, and user registration. Runs ONLY when called — spins up in 50–500ms cold start, executes in milliseconds, then shuts down. If 10,000 users log in simultaneously, AWS runs 10,000 parallel instances automatically. You pay only for the ~50ms of execution time, not 24/7 server uptime.",
+          },
+        },
+        {
+          id: "sl3",
+          label: "Products Function",
+          icon: "📦",
+          x: 37,
+          y: 2,
+          info: {
+            title: "Lambda — Products Function",
+            body: "Handles product catalog reads and searches. This function can scale to zero when no requests arrive (saving money) and scale to thousands of concurrent instances during a flash sale. Each function is deployed and versioned independently — updating the Products Lambda does not redeploy the Orders Lambda.",
+          },
+        },
+        {
+          id: "sl4",
+          label: "Orders Function",
+          icon: "📋",
+          x: 63,
+          y: 2,
+          info: {
+            title: "Lambda — Orders Function",
+            body: "Processes order creation and updates. Writes to DynamoDB and publishes events to SNS/EventBridge. The 15-minute Lambda execution limit means long-running workflows must be broken into step functions or delegated to async queues (SQS). Lambda functions should be small, focused, and fast.",
+          },
+        },
+        {
+          id: "sl5",
+          label: "DynamoDB",
+          icon: "⚡",
+          x: 30,
+          y: 3,
+          info: {
+            title: "DynamoDB — Serverless Database",
+            body: "DynamoDB is the natural database partner for Lambda: fully managed, auto-scales with no connection pool management. Since Lambda may spawn 1000s of instances, traditional RDBMS connection limits become a problem — each Lambda opens a DB connection. DynamoDB's HTTP-based API sidesteps this entirely. For complex queries, RDS Proxy proxies connections to relational DBs.",
+          },
+        },
+        {
+          id: "sl6",
+          label: "S3 Storage",
+          icon: "🪣",
+          x: 70,
+          y: 3,
+          info: {
+            title: "S3 — Object Storage",
+            body: "Stores user uploads, product images, order PDFs, and static website assets. S3 events can also TRIGGER Lambda functions automatically — e.g., upload an image to S3 → triggers a Lambda to resize it → saves thumbnail back to S3. This S3 → Lambda trigger pattern is fundamental to serverless data pipelines.",
+          },
+        },
+      ],
+      connections: [
+        { from: "sl0", to: "sl1" },
+        { from: "sl1", to: "sl2" },
+        { from: "sl1", to: "sl3" },
+        { from: "sl1", to: "sl4" },
+        { from: "sl2", to: "sl5" },
+        { from: "sl3", to: "sl5" },
+        { from: "sl4", to: "sl5" },
+        { from: "sl4", to: "sl6" },
+      ],
+    },
+
+    /* ── Layered (N-Tier) Architecture ─────────────── */
+    {
+      id: "idia-layered",
+      title: "Layered (N-Tier) Architecture",
+      icon: "🎂",
+      description:
+        "Click each tier to understand its responsibility and boundaries",
+      layout: "linear",
+      nodes: [
+        {
+          id: "ly0",
+          label: "Presentation Tier",
+          icon: "🖥️",
+          info: {
+            title: "Presentation Tier — UI Layer",
+            body: "Responsible only for displaying data and capturing user input. React, Angular, or server-rendered HTML. This layer MUST NOT contain business logic or touch the database directly. Separation here means the UI can be replaced (web → mobile) without touching any business rules or database code. Calls down to the API / Business layer only.",
+          },
+        },
+        {
+          id: "ly1",
+          label: "API / Controller Tier",
+          icon: "🔀",
+          info: {
+            title: "API / Controller Tier — Request Handling",
+            body: "Receives HTTP requests, validates input (are required fields present? is the token valid?), and delegates to the business logic layer. Returns HTTP responses. This layer owns: routing, input validation, authentication & authorisation checks, serialisation (JSON ↔ objects), and error-to-HTTP status mapping. It does NOT contain business rules.",
+          },
+        },
+        {
+          id: "ly2",
+          label: "Business Logic Tier",
+          icon: "⚙️",
+          info: {
+            title: "Business Logic Tier — Domain Services",
+            body: "The heart of the application. ALL business rules live here: 'an order cannot be placed if inventory is zero', 'discount applies only to premium users', 'payment must be retried 3 times before failing'. This layer is framework-agnostic — it should run without a web server or database. Testing business logic is fast and reliable when it has no external dependencies.",
+          },
+        },
+        {
+          id: "ly3",
+          label: "Data Access Tier",
+          icon: "📂",
+          info: {
+            title: "Data Access Tier — Repository / ORM Layer",
+            body: "Abstracts all database operations behind interfaces (Repository pattern). The business layer calls userRepository.findById(id) without knowing if it's PostgreSQL, MySQL, or MongoDB underneath. This abstraction enables: swapping databases without rewriting business logic, easier unit testing with mock repositories, and centralised query optimisation in one place.",
+          },
+        },
+        {
+          id: "ly4",
+          label: "Database Tier",
+          icon: "🗄️",
+          info: {
+            title: "Database Tier — Persistent Storage",
+            body: "PostgreSQL, MySQL, or any persistence store. Only the Data Access tier communicates directly with the database — no other tier makes direct DB calls. This strict boundary prevents the 'database everywhere' antipattern where business logic leaks into SQL query strings. Each layer only calls the layer directly below it — this is the defining rule of N-tier architecture.",
+          },
+        },
+      ],
+      connections: [
+        { from: "ly0", to: "ly1" },
+        { from: "ly1", to: "ly2" },
+        { from: "ly2", to: "ly3" },
+        { from: "ly3", to: "ly4" },
+      ],
+    },
+
+    /* ── CQRS Architecture ─────────────────────────── */
+    {
+      id: "idia-cqrs",
+      title: "CQRS Architecture",
+      icon: "🔀",
+      description:
+        "Click each component to understand command/query separation",
+      layout: "tree",
+      nodes: [
+        {
+          id: "cq0",
+          label: "Client",
+          icon: "👤",
+          x: 50,
+          y: 0,
+          info: {
+            title: "Client — Command or Query?",
+            body: "Every client request is classified as either a Command (change state: place order, update profile) or a Query (read state: get product, list orders). CQRS routes these down completely separate paths with separate models optimised for each. Most systems are 80–90% reads — CQRS lets you scale and optimise them independently.",
+          },
+        },
+        {
+          id: "cq1",
+          label: "Command Handler",
+          icon: "✏️",
+          x: 20,
+          y: 1,
+          info: {
+            title: "Command Handler — Write Side",
+            body: "Receives write requests: PlaceOrder, CancelOrder, UpdateProduct. Validates the command, applies business rules, and writes to the Write Database. After a successful write, it publishes a domain event (OrderPlaced, OrderCancelled) to the Event Bus. The write model is normalised (3NF) for data integrity, not optimised for query speed.",
+          },
+        },
+        {
+          id: "cq2",
+          label: "Query Handler",
+          icon: "🔍",
+          x: 80,
+          y: 1,
+          info: {
+            title: "Query Handler — Read Side",
+            body: "Handles read requests: GetOrderDetails, ListProductsByCategory. Reads from a denormalised Read Model specifically built for fast queries. No joins needed — all data is pre-computed. Because the Read Handler never writes, it can be scaled independently and can run against read replicas or a completely different database technology (e.g., Elasticsearch for search).",
+          },
+        },
+        {
+          id: "cq3",
+          label: "Write DB",
+          icon: "🗄️",
+          x: 20,
+          y: 2,
+          info: {
+            title: "Write Database — Normalised PostgreSQL",
+            body: "Stores the canonical system state in a normalised relational schema. Optimised for write integrity: ACID transactions, foreign keys, constraints. Only the Command Handler writes here. Because it's not used for complex read queries, it can be a lean, write-optimised database. Aurora PostgreSQL with no read replicas is common here.",
+          },
+        },
+        {
+          id: "cq4",
+          label: "Event Bus",
+          icon: "📡",
+          x: 50,
+          y: 2,
+          info: {
+            title: "Event Bus — Change Propagation",
+            body: "After every successful write, the Command Handler publishes a domain event (OrderPlaced, InventoryChanged) to Kafka or EventBridge. The Read Model Projector subscribes to these events and asynchronously updates the denormalised Read Model. This is eventual consistency: the Read Model may lag the Write DB by milliseconds to seconds.",
+          },
+        },
+        {
+          id: "cq5",
+          label: "Read Model",
+          icon: "⚡",
+          x: 80,
+          y: 2,
+          info: {
+            title: "Read Model — Denormalised View Store",
+            body: "Pre-computed, denormalised views purpose-built for specific queries. Instead of joining 5 tables for every order page load, the Read Model stores a pre-joined document: {orderId, productName, customerName, total, status} — all in one row/document. Technology: Redis for hot data, Elasticsearch for full-text search, PostgreSQL read replicas, or a document store like MongoDB. Rebuilding read models from the event log is always possible.",
+          },
+        },
+      ],
+      connections: [
+        { from: "cq0", to: "cq1" },
+        { from: "cq0", to: "cq2" },
+        { from: "cq1", to: "cq3" },
+        { from: "cq1", to: "cq4" },
+        { from: "cq4", to: "cq5" },
+        { from: "cq2", to: "cq5" },
+      ],
+    },
   ];
 
   /* ─────────────────────────────────────────────────── */
